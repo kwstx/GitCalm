@@ -1,7 +1,7 @@
 import Hero from "@/components/Hero";
-import Features from "@/components/Features";
-import DemoToggle from "@/components/DemoToggle";
 import Revolutionize from "@/components/Revolutionize";
+import Transform from "@/components/Transform";
+import DemoToggle from "@/components/DemoToggle";
 import CTA from "@/components/CTA";
 
 export default function Home() {
@@ -9,7 +9,7 @@ export default function Home() {
     <main>
       <Hero />
       <Revolutionize />
-      <Features />
+      <Transform />
       <DemoToggle />
       <CTA />
     </main>
