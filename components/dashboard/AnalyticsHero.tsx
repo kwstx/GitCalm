@@ -6,9 +6,20 @@ type StoryType = 'success' | 'warning' | 'info';
 interface AnalyticsHeroProps {
     onSelectCategory: (category: StoryType | null) => void;
     selectedCategory: StoryType | null;
+    counts?: {
+        success: number;
+        warning: number;
+        info: number;
+    };
+    loading?: boolean;
 }
 
-export default function AnalyticsHero({ onSelectCategory, selectedCategory }: AnalyticsHeroProps) {
+export default function AnalyticsHero({
+    onSelectCategory,
+    selectedCategory,
+    counts = { success: 177, warning: 87, info: 23 },
+    loading = false
+}: AnalyticsHeroProps) {
 
     const handleCategoryClick = (category: StoryType) => {
         // Toggle: if clicking the already selected one, clear it (show none? or toggle off?)
@@ -88,7 +99,7 @@ export default function AnalyticsHero({ onSelectCategory, selectedCategory }: An
                             transition: 'opacity 0.2s'
                         }}
                     >
-                        177
+                        {loading ? '...' : counts.success}
                         <div style={{
                             position: 'absolute',
                             top: '-15px',
@@ -133,7 +144,7 @@ export default function AnalyticsHero({ onSelectCategory, selectedCategory }: An
                             transition: 'opacity 0.2s'
                         }}
                     >
-                        87
+                        {loading ? '...' : counts.warning}
                         <div style={{
                             position: 'absolute',
                             top: '-15px',
@@ -178,7 +189,7 @@ export default function AnalyticsHero({ onSelectCategory, selectedCategory }: An
                             transition: 'opacity 0.2s'
                         }}
                     >
-                        23
+                        {loading ? '...' : counts.info}
                         <div style={{
                             position: 'absolute',
                             bottom: '-15px',
@@ -217,10 +228,15 @@ export default function AnalyticsHero({ onSelectCategory, selectedCategory }: An
                     >
                         <div style={{ fontSize: '0.85rem', color: '#6B7280', marginBottom: '0.5rem' }}>Outcome</div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#111' }}>177 <span style={{ fontSize: '0.9rem', color: '#6B7280', fontWeight: 500 }}>(67%)</span></span>
+                            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#111' }}>
+                                {loading ? '...' : counts.success}
+                                <span style={{ fontSize: '0.9rem', color: '#6B7280', fontWeight: 500 }}>
+                                    ({Math.round((counts.success / (counts.success + counts.warning + counts.info)) * 100)}%)
+                                </span>
+                            </span>
                         </div>
                         <div style={{ width: '100%', height: '6px', background: '#E5E7EB', borderRadius: '3px' }}>
-                            <div style={{ width: '67%', height: '100%', background: '#FBBF24', borderRadius: '3px' }}></div>
+                            <div style={{ width: `${(counts.success / (counts.success + counts.warning + counts.info)) * 100}%`, height: '100%', background: '#FBBF24', borderRadius: '3px' }}></div>
                         </div>
                     </div>
 
@@ -238,10 +254,15 @@ export default function AnalyticsHero({ onSelectCategory, selectedCategory }: An
                     >
                         <div style={{ fontSize: '0.85rem', color: '#6B7280', marginBottom: '0.5rem' }}>Attention</div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#111' }}>87 <span style={{ fontSize: '0.9rem', color: '#6B7280', fontWeight: 500 }}>(21%)</span></span>
+                            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#111' }}>
+                                {loading ? '...' : counts.warning}
+                                <span style={{ fontSize: '0.9rem', color: '#6B7280', fontWeight: 500 }}>
+                                    ({Math.round((counts.warning / (counts.success + counts.warning + counts.info)) * 100)}%)
+                                </span>
+                            </span>
                         </div>
                         <div style={{ width: '100%', height: '6px', background: '#E5E7EB', borderRadius: '3px' }}>
-                            <div style={{ width: '21%', height: '100%', background: '#EF4444', borderRadius: '3px' }}></div>
+                            <div style={{ width: `${(counts.warning / (counts.success + counts.warning + counts.info)) * 100}%`, height: '100%', background: '#EF4444', borderRadius: '3px' }}></div>
                         </div>
                     </div>
 
@@ -259,10 +280,15 @@ export default function AnalyticsHero({ onSelectCategory, selectedCategory }: An
                     >
                         <div style={{ fontSize: '0.85rem', color: '#6B7280', marginBottom: '0.5rem' }}>Update</div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#111' }}>23 <span style={{ fontSize: '0.9rem', color: '#6B7280', fontWeight: 500 }}>(12%)</span></span>
+                            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#111' }}>
+                                {loading ? '...' : counts.info}
+                                <span style={{ fontSize: '0.9rem', color: '#6B7280', fontWeight: 500 }}>
+                                    ({Math.round((counts.info / (counts.success + counts.warning + counts.info)) * 100)}%)
+                                </span>
+                            </span>
                         </div>
                         <div style={{ width: '100%', height: '6px', background: '#E5E7EB', borderRadius: '3px', }}>
-                            <div style={{ width: '12%', height: '100%', background: '#8B5CF6', borderRadius: '3px', backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.2) 10px, rgba(255,255,255,0.2) 20px)' }}></div>
+                            <div style={{ width: `${(counts.info / (counts.success + counts.warning + counts.info)) * 100}%`, height: '100%', background: '#8B5CF6', borderRadius: '3px', backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.2) 10px, rgba(255,255,255,0.2) 20px)' }}></div>
                         </div>
                     </div>
                 </div>
