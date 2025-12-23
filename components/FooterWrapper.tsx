@@ -7,7 +7,8 @@ export default function FooterWrapper() {
     const pathname = usePathname();
 
     // Hide footer on specific paths
-    if (pathname === '/learn-more') {
+    // Hide footer on specific paths
+    if (pathname === '/learn-more' || pathname === '/how-it-works') {
         return null;
     }
 

@@ -42,19 +42,20 @@ export default function Navbar() {
                 </Link>
 
                 {/* Navigation Links - Centered */}
+                {/* Navigation Links - Centered */}
                 <div style={{
                     display: 'flex',
                     gap: '2rem',
                     alignItems: 'center',
                     fontSize: '0.9rem',
                     fontWeight: 500,
-                    color: '#4b5563'
+                    color: '#000'
                 }}>
-                    <Link href="#how-it-works" style={{ color: '#111', fontWeight: 600 }}>How it works</Link>
-                    <Link href="#features">Features</Link>
-                    <Link href="#pricing">Pricing</Link>
-                    <Link href="#integrations">Integrations</Link>
-                    <Link href="#about">About</Link>
+                    <Link href="/how-it-works" style={{ color: '#000', fontWeight: 600, textDecoration: 'none' }}>How it works</Link>
+                    <Link href="#features" style={{ color: '#000', textDecoration: 'none' }}>Features</Link>
+                    <Link href="#pricing" style={{ color: '#000', textDecoration: 'none' }}>Pricing</Link>
+                    <Link href="#integrations" style={{ color: '#000', textDecoration: 'none' }}>Integrations</Link>
+                    <Link href="#about" style={{ color: '#000', textDecoration: 'none' }}>About</Link>
                 </div>
 
                 {/* Right Actions */}
