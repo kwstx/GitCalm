@@ -79,39 +79,117 @@ export default function DemoToggle() {
                         <div style={{ padding: '1rem', textAlign: 'center', fontSize: '0.85rem', color: 'hsl(var(--primary))', cursor: 'pointer' }}>View 136 more...</div>
                     </div>
                 ) : (
-                    <div className="glass" style={{ width: '100%', maxWidth: '600px', textAlign: 'left', padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '2rem', animation: 'fadeIn 0.3s ease' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--glass-border)' }}>
-                            <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'hsl(var(--primary))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '1.5rem' }}>✓</div>
-                            <div>
-                                <h3 style={{ fontSize: '1.25rem' }}>Daily Digest</h3>
-                                <span style={{ fontSize: '0.95rem', opacity: 0.6 }}>Prepared for you just now.</span>
+                    <div style={{
+                        width: '100%',
+                        maxWidth: '600px',
+                        textAlign: 'left',
+                        padding: '3rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '2rem',
+                        animation: 'fadeIn 0.3s ease',
+                        background: '#fff',
+                        borderRadius: '24px',
+                        boxShadow: '0 20px 40px -5px rgba(0,0,0,0.1)',
+                        border: '1px solid rgba(0,0,0,0.05)'
+                    }}>
+                        {/* Header */}
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '1.5rem', borderBottom: '1px solid #f0f0f0' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                                <div style={{
+                                    width: 56,
+                                    height: 56,
+                                    borderRadius: '16px',
+                                    background: '#10B981',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    color: 'white',
+                                    boxShadow: '0 8px 16px -4px rgba(16, 185, 129, 0.3)'
+                                }}>
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#111', lineHeight: 1.1, marginBottom: '0.2rem' }}>Daily Digest</h3>
+                                    <span style={{ fontSize: '0.95rem', color: '#666', fontWeight: 500 }}>Prepared just now for you</span>
+                                </div>
                             </div>
                         </div>
 
+                        {/* Content */}
                         <div>
-                            <p style={{ fontWeight: 600, marginBottom: '1rem', fontSize: '0.9rem', textTransform: 'uppercase', opacity: 0.8, letterSpacing: '0.05em' }}>Key Highlights</p>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+                                <p style={{ fontWeight: 700, fontSize: '0.85rem', textTransform: 'uppercase', color: '#999', letterSpacing: '0.05em' }}>Key Highlights</p>
+                                <span style={{ fontSize: '0.85rem', color: '#3B82F6', fontWeight: 600, cursor: 'pointer' }}>View All Activity</span>
+                            </div>
 
-                            <div style={{ padding: '1.25rem', background: 'rgba(255,255,255,0.4)', borderRadius: 'var(--radius-md)', marginBottom: '1rem', border: '1px solid var(--glass-border)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', color: '#ef4444', fontWeight: 600, fontSize: '0.85rem' }}>
-                                    <span>⚠</span> Issue Detected
+                            {/* Item 1: Alert */}
+                            <div style={{
+                                padding: '1.5rem',
+                                background: '#FEF2F2',
+                                borderRadius: '16px',
+                                marginBottom: '1rem',
+                                border: '1px solid #FEE2E2',
+                                transition: 'transform 0.2s',
+                                cursor: 'pointer'
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem', color: '#EF4444', fontWeight: 700, fontSize: '0.9rem' }}>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                    </svg>
+                                    Action Required
                                 </div>
-                                <p style={{ lineHeight: 1.5, fontSize: '1rem' }}>
-                                    CI failures in <span style={{ fontWeight: 600 }}>payment-service</span> are blocking the release. The integration suite has failed 4 times in a row.
+                                <p style={{ lineHeight: 1.5, fontSize: '1.05rem', color: '#444' }}>
+                                    <span style={{ fontWeight: 700, color: '#111' }}>CI/CD Blockage:</span> Tests in <span style={{ fontWeight: 600, background: '#fff', padding: '2px 6px', borderRadius: 4, border: '1px solid #facaca' }}>payment-service</span> are failing integration checks.
                                 </p>
                             </div>
 
-                            <div style={{ padding: '1.25rem', background: 'rgba(255,255,255,0.4)', borderRadius: 'var(--radius-md)', border: '1px solid var(--glass-border)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', color: 'hsl(var(--primary))', fontWeight: 600, fontSize: '0.85rem' }}>
-                                    <span>🚀</span> Activity Summary
+                            {/* Item 2: Summary */}
+                            <div style={{
+                                padding: '1.5rem',
+                                background: '#F0F9FF',
+                                borderRadius: '16px',
+                                border: '1px solid #E0F2FE'
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem', color: '#0284C7', fontWeight: 700, fontSize: '0.9rem' }}>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                                    </svg>
+                                    Activity Velocity
                                 </div>
-                                <p style={{ lineHeight: 1.5, fontSize: '1rem' }}>
-                                    12 PRs were merged today. Most activity was in <span style={{ fontWeight: 600 }}>auth-service</span> (Frontend team) and <span style={{ fontWeight: 600 }}>core-api</span>.
+                                <p style={{ lineHeight: 1.5, fontSize: '1.05rem', color: '#444' }}>
+                                    <span style={{ fontWeight: 700, color: '#111' }}>12 PRs Merged.</span> High velocity in <span style={{ fontWeight: 600, color: '#0284C7' }}>auth-service</span> (Frontend Team).
                                 </p>
                             </div>
                         </div>
 
-                        <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            <button className="btn btn-primary" style={{ width: '100%' }}>View Full Report</button>
+                        <div style={{ marginTop: '0.5rem' }}>
+                            <button style={{
+                                width: '100%',
+                                background: '#111',
+                                color: '#fff',
+                                border: 'none',
+                                padding: '1.25rem',
+                                borderRadius: '16px',
+                                fontSize: '1rem',
+                                fontWeight: 700,
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.5rem',
+                                transition: 'opacity 0.2s'
+                            }}>
+                                View Full Report
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </button>
                         </div>
                     </div>
                 )}
