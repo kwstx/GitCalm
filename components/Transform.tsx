@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function Transform() {
     return (
-        <section className="container section-padding" style={{ textAlign: 'center' }}>
+        <section className="container" style={{ padding: '6rem 1.5rem', textAlign: 'center' }}>
             {/* Header */}
             <div style={{ maxWidth: '800px', margin: '0 auto 5rem auto' }}>
                 <h2 style={{
