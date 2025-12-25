@@ -97,7 +97,7 @@ export async function getIntegrations() {
     });
 }
 
-export async function saveIntegration(integrationId: string, connected: boolean) {
+export async function saveIntegration(integrationId: string, data: { connected: boolean; config?: any }) {
     const userId = await getCurrentUserId();
     if (!userId) throw new Error("Not authenticated");
 
@@ -109,13 +109,15 @@ export async function saveIntegration(integrationId: string, connected: boolean)
             }
         },
         update: {
-            connected,
+            connected: data.connected,
+            config: data.config,
             updatedAt: new Date()
         },
         create: {
             userId,
             providerId: integrationId,
-            connected
+            connected: data.connected,
+            config: data.config ?? {}
         }
     });
 }
