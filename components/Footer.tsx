@@ -1,3 +1,6 @@
+import Link from 'next/link';
+// Re-trigger build
+
 export default function Footer() {
     return (
         <footer style={{
@@ -13,11 +16,11 @@ export default function Footer() {
                 opacity: 0.6,
                 fontSize: '0.9rem'
             }}>
-                <p>&copy; {new Date().getFullYear()} GitCalm. All rights reserved.</p>
+                <p>&copy; {new Date().getFullYear()} GitCalm. Built as a free project.</p>
                 <div style={{ display: 'flex', gap: '1.5rem' }}>
-                    <a href="#">Privacy</a>
-                    <a href="#">Terms</a>
-                    <a href="#">Twitter</a>
+                    <Link href="/privacy" style={{ textDecoration: 'none', color: 'inherit' }}>No Tracking</Link>
+                    <Link href="/open-source" style={{ textDecoration: 'none', color: 'inherit' }}>Open Source</Link>
+                    <Link href="https://github.com/kwstx/AI-powered-GitHub-activity-digest" target="_blank" style={{ textDecoration: 'none', color: 'inherit' }}>GitHub</Link>
                 </div>
             </div>
         </footer>

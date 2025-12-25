@@ -1,7 +1,9 @@
-import NextAuth from "next-auth"
-import GitHub from "next-auth/providers/github"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { prisma } from "@/lib/prisma"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+    adapter: PrismaAdapter(prisma),
+    session: { strategy: "jwt" }, // Keep JWT for performance, but sync user to DB
     providers: [
         GitHub({
             clientId: process.env.GITHUB_ID,
@@ -12,7 +14,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         async jwt({ token, account }) {
             // Persist the OAuth access token to the token right after signin
             if (account) {
-                console.log('[AUTH] JWT Callback: Account present, saving token');
                 token.accessToken = account.access_token;
                 token.id = account.providerAccountId;
             }
@@ -20,10 +21,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         },
         async session({ session, token }) {
             // Send properties to the client
-            console.log('[AUTH] Session Callback: Token present?', !!token.accessToken);
             session.accessToken = token.accessToken as string;
             if (session.user) {
-                session.user.id = token.id as string;
+                // When using adapter, id comes from DB user id, but token.sub is also valid
+                session.user.id = token.sub || (token.id as string);
             }
             return session;
         },

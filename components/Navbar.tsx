@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Navbar() {
     return (
@@ -33,11 +34,13 @@ export default function Navbar() {
                     color: '#000',
                     textDecoration: 'none'
                 }}>
-                    <div style={{ display: 'flex', gap: '2px' }}>
-                        <div style={{ width: 6, height: 6, background: '#000', borderRadius: '50%' }}></div>
-                        <div style={{ width: 6, height: 6, background: '#000', borderRadius: '50%', opacity: 0.5 }}></div>
-                        <div style={{ width: 6, height: 6, background: '#000', borderRadius: '50%', opacity: 0.25 }}></div>
-                    </div>
+                    <Image
+                        src="/logo.svg"
+                        alt="GitCalm Logo"
+                        width={42}
+                        height={24}
+                        style={{ objectFit: 'contain' }}
+                    />
                     GitCalm
                 </Link>
 
@@ -52,26 +55,15 @@ export default function Navbar() {
                     color: '#000'
                 }}>
                     <Link href="/how-it-works" style={{ color: '#000', fontWeight: 600, textDecoration: 'none' }}>How it works</Link>
-                    <Link href="#features" style={{ color: '#000', textDecoration: 'none' }}>Features</Link>
-                    <Link href="#pricing" style={{ color: '#000', textDecoration: 'none' }}>Pricing</Link>
-                    <Link href="#integrations" style={{ color: '#000', textDecoration: 'none' }}>Integrations</Link>
-                    <Link href="#about" style={{ color: '#000', textDecoration: 'none' }}>About</Link>
+                    <Link href="/features" style={{ color: '#000', textDecoration: 'none' }}>Features</Link>
+
+
+                    <Link href="/about" style={{ color: '#000', textDecoration: 'none' }}>About</Link>
                 </div>
 
                 {/* Right Actions */}
                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                    {/* Search Icon */}
-                    <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: '0.5rem', opacity: 0.6 }}>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                    </button>
 
-                    {/* Flag Icon (UK/US style placeholder) */}
-                    <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: '0.5rem', fontSize: '1.2rem' }}>
-                        🇬🇧
-                    </button>
 
                     {/* CTA Button */}
                     <Link href="/login" style={{

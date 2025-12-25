@@ -126,7 +126,7 @@ export default function Revolutionize() {
                 <h2 style={{
                     fontSize: '3.5rem',
                     lineHeight: 1.2,
-                    fontWeight: 500,
+                    fontWeight: 800,
                     marginBottom: '1.5rem',
                     color: '#111'
                 }}>
@@ -160,7 +160,7 @@ export default function Revolutionize() {
                     marginBottom: '3rem'
                 }}>
                     Stop drowning in notifications. Get a clear, actionable summary of <br />
-                    yesterday's code activity, delivered every morning.
+                    recent code activity, organized for your daily review.
                 </p>
 
             </div>

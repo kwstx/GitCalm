@@ -23,7 +23,7 @@ export default function Transform() {
                     maxWidth: '600px',
                     margin: '0 auto'
                 }}>
-                    Stop digging through endless notifications and commit logs. Get a consolidated engineering digest that highlights what actually matters for your daily standup.
+                    Stop digging through endless notifications and commit logs. View a consolidated engineering digest that organizes team activity for your daily standup.
                 </p>
             </div>
 
@@ -61,7 +61,7 @@ export default function Transform() {
                             fontWeight: 700,
                             color: '#333'
                         }}>
-                            103 <span style={{ fontSize: '0.9rem', color: '#888', fontWeight: 500 }}>PRs/wk</span>
+                            8 <span style={{ fontSize: '0.9rem', color: '#888', fontWeight: 500 }}>Pending</span>
                         </div>
 
                         {/* Floating Icon: Chart Line */}
@@ -101,15 +101,15 @@ export default function Transform() {
                             <div style={{ width: 32, height: 32, background: '#10B981', borderRadius: '50%', margin: '0 auto 0.5rem auto', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
                                 ✓
                             </div>
-                            <div style={{ fontSize: '0.9rem', fontWeight: 700 }}>1242</div>
-                            <div style={{ fontSize: '0.7rem', opacity: 0.5 }}>Issues Closed</div>
+                            <div style={{ fontSize: '0.9rem', fontWeight: 700 }}>12</div>
+                            <div style={{ fontSize: '0.7rem', opacity: 0.5 }}>Blockers Resolved</div>
                         </div>
                     </div>
 
                     <div>
-                        <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '0.5rem' }}>Accelerate Review Cycles</h3>
+                        <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '0.5rem' }}>Track Review Activity</h3>
                         <p style={{ fontSize: '0.95rem', opacity: 0.6, lineHeight: 1.5 }}>
-                            Optimize your review cycles and reduce drag.
+                            Monitor pull request status and identify potential blockers.
                         </p>
                     </div>
                 </div>
@@ -123,9 +123,9 @@ export default function Transform() {
                     minHeight: '400px'
                 }}>
                     <div style={{ marginBottom: '2rem' }}>
-                        <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '0.5rem' }}>Codebase Evolution</h3>
+                        <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '0.5rem' }}>Activity Trends</h3>
                         <p style={{ fontSize: '0.95rem', opacity: 0.6, lineHeight: 1.5 }}>
-                            Visualize code churn trends and patterns to make data-driven decisions for codebase expansion.
+                            Visualize team activity levels over time to spot bottlenecks or productive streaks.
                         </p>
                     </div>
 
@@ -163,10 +163,8 @@ export default function Transform() {
                             boxShadow: '0 5px 15px rgba(0,0,0,0.2)'
                         }}>
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5">
-                                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                                <path d="M3 3v5h5" />
-                                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
-                                <path d="M16 16h5v5" />
+                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                                <polyline points="17 6 23 6 23 12"></polyline>
                             </svg>
                         </div>
                     </div>
@@ -184,9 +182,9 @@ export default function Transform() {
                     justifyContent: 'space-between'
                 }}>
                     <div style={{ marginBottom: '1rem' }}>
-                        <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '0.5rem' }}>Merge Workflow</h3>
+                        <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '0.5rem' }}>Smart Prioritization</h3>
                         <p style={{ fontSize: '0.95rem', opacity: 0.6, lineHeight: 1.5 }}>
-                            From automated summaries to AI-powered prioritization, this feature streamlines the entire workflow.
+                            Automatically highlight critical blockers and successful merges to streamline your workflow.
                         </p>
                     </div>
 
@@ -199,9 +197,9 @@ export default function Transform() {
                             padding: '1.5rem',
                             boxShadow: '0 10px 20px rgba(0,0,0,0.05)'
                         }}>
-                            <div style={{ fontSize: '0.8rem', fontWeight: 600, marginBottom: '0.5rem', opacity: 0.7 }}>Time to Merge</div>
-                            <div style={{ background: '#111', color: '#fff', padding: '1rem', borderRadius: '12px', fontSize: '1.5rem', fontWeight: 700, textAlign: 'center' }}>
-                                2.4d
+                            <div style={{ fontSize: '0.8rem', fontWeight: 600, marginBottom: '0.5rem', opacity: 0.7 }}>Critical</div>
+                            <div style={{ background: '#DC2626', color: '#fff', padding: '1rem', borderRadius: '12px', fontSize: '1.5rem', fontWeight: 700, textAlign: 'center' }}>
+                                3
                             </div>
                         </div>
 
@@ -217,8 +215,9 @@ export default function Transform() {
                                 boxShadow: '0 5px 10px rgba(0,0,0,0.05)'
                             }}>
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="2">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <polyline points="12 6 12 12 16 14" />
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
                                 </svg>
                             </div>
                             <div style={{
@@ -230,7 +229,7 @@ export default function Transform() {
                                 justifyContent: 'center',
                                 boxShadow: '0 5px 10px rgba(0,0,0,0.05)'
                             }}>
-                                <div style={{ width: 24, height: 24, background: '#10B981', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.8rem' }}>AI</div>
+                                <div style={{ width: 24, height: 24, background: '#10B981', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.8rem' }}>P1</div>
                             </div>
                         </div>
                     </div>
@@ -289,9 +288,9 @@ export default function Transform() {
                     justifyContent: 'space-between'
                 }}>
                     <div>
-                        <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '0.5rem' }}>Team Context</h3>
+                        <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '0.5rem' }}>Activity Filtering</h3>
                         <p style={{ fontSize: '0.95rem', opacity: 0.6, lineHeight: 1.5 }}>
-                            Effortlessly segment activity streams based on customizable roles for targeted visibility and enhanced focus.
+                            Curate your feed by selecting specific repositories and focus areas relevant to your role.
                         </p>
                     </div>
 
@@ -301,16 +300,16 @@ export default function Transform() {
                         {/* Visual 1: Retention/Progress */}
                         <div style={{ background: '#fff', borderRadius: '20px', padding: '1.5rem', boxShadow: '0 10px 20px rgba(0,0,0,0.05)' }}>
                             <div style={{ height: '8px', width: '100%', background: '#FEE2E2', borderRadius: '4px', marginBottom: '1rem', position: 'relative', overflow: 'hidden' }}>
-                                <div style={{ height: '100%', width: '51%', background: '#EF4444', borderRadius: '4px' }}></div>
+                                <div style={{ height: '100%', width: '85%', background: '#EF4444', borderRadius: '4px' }}></div>
                             </div>
-                            <div style={{ fontSize: '2rem', fontWeight: 700, lineHeight: 1 }}>51%</div>
-                            <div style={{ fontSize: '0.8rem', opacity: 0.5, marginTop: '0.2rem' }}>Notifications Silenced</div>
+                            <div style={{ fontSize: '2rem', fontWeight: 700, lineHeight: 1 }}>85%</div>
+                            <div style={{ fontSize: '0.8rem', opacity: 0.5, marginTop: '0.2rem' }}>Noise Filtered</div>
                         </div>
 
                         {/* Visual 2: New Leads/Count */}
                         <div style={{ background: '#fff', borderRadius: '20px', padding: '1.5rem', boxShadow: '0 10px 20px rgba(0,0,0,0.05)', position: 'relative', left: '20px', marginBottom: '-20px' }}>
-                            <div style={{ fontSize: '0.75rem', opacity: 0.5, marginBottom: '0.5rem' }}>Merged Pull Requests</div>
-                            <div style={{ fontSize: '2.5rem', fontWeight: 700, lineHeight: 1, marginBottom: '0.5rem' }}>342</div>
+                            <div style={{ fontSize: '0.75rem', opacity: 0.5, marginBottom: '0.5rem' }}>Active Repositories</div>
+                            <div style={{ fontSize: '2.5rem', fontWeight: 700, lineHeight: 1, marginBottom: '0.5rem' }}>5</div>
 
                             {/* Tiny bars */}
                             <div style={{ display: 'flex', gap: '4px' }}>

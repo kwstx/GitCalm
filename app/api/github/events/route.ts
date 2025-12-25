@@ -18,9 +18,12 @@ export async function POST(request: Request) {
             );
         }
 
-        const { repos } = await request.json();
+        const body = await request.json();
+        console.log('[API] Request body:', JSON.stringify(body));
+        const { repos, startDate } = body;
 
         if (!repos || !Array.isArray(repos)) {
+            console.error('[API] Invalid repos:', repos);
             return NextResponse.json(
                 { error: 'Invalid request: repos array required' },
                 { status: 400 }
@@ -28,35 +31,37 @@ export async function POST(request: Request) {
         }
 
         const octokit = createGitHubClient(session.accessToken as string);
-        const allEvents = [];
 
         // Fetch events for each repository
-        for (const repoFullName of repos) {
+        // Fetch events for each repository in parallel
+        const repoPromises = repos.map(async (repoFullName: string) => {
             const [owner, repo] = repoFullName.split('/');
-
-            if (!owner || !repo) continue;
+            if (!owner || !repo) return null;
 
             try {
-                // Fetch different types of data
+                // Fetch different types of data with 'since' filter
                 const [events, prs, issues, workflows] = await Promise.all([
-                    fetchRepoEvents(octokit, owner, repo),
-                    fetchPullRequests(octokit, owner, repo),
-                    fetchIssues(octokit, owner, repo),
-                    fetchWorkflowRuns(octokit, owner, repo).catch(() => []), // CI might not be available
+                    fetchRepoEvents(octokit, owner, repo, 30, startDate),
+                    fetchPullRequests(octokit, owner, repo, 'all', startDate),
+                    fetchIssues(octokit, owner, repo, 'all', startDate),
+                    fetchWorkflowRuns(octokit, owner, repo, startDate).catch(() => []), // CI might not be available
                 ]);
 
-                allEvents.push({
+                return {
                     repo: repoFullName,
                     events,
                     pullRequests: prs,
                     issues,
                     workflows,
-                });
+                };
             } catch (error) {
                 console.error(`Error fetching data for ${repoFullName}:`, error);
-                // Continue with other repos even if one fails
+                return null; // Continue with other repos
             }
-        }
+        });
+
+        const results = await Promise.all(repoPromises);
+        const allEvents = results.filter((r) => r !== null);
 
         // Process events server-side with AI
         console.log('[API] Starting server-side processing...');

@@ -56,7 +56,7 @@ export default function Hero() {
                     margin: '0 auto',
                     fontWeight: 500
                 }}>
-                    Stop drowning in notifications. Get a concise, intelligent summary of your team's GitHub activity every morning.
+                    Stop drowning in notifications. View a concise, intelligent summary of your team's GitHub activity, ready for your daily review.
                 </p>
 
                 {/* CTA */}

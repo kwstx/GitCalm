@@ -11,6 +11,8 @@ export default function Onboarding() {
     // State form
     const [role, setRole] = useState('ic');
     const [selectedRepos, setSelectedRepos] = useState<string[]>([]);
+    const [focusAreas, setFocusAreas] = useState<string[]>([]);
+    const [digestSchedule, setDigestSchedule] = useState('morning');
 
     useEffect(() => {
         // Load initial state
@@ -21,6 +23,8 @@ export default function Onboarding() {
                     const data = await res.json();
                     if (data.role) setRole(data.role);
                     if (data.selectedRepos) setSelectedRepos(data.selectedRepos);
+                    if (data.focusAreas) setFocusAreas(data.focusAreas);
+                    if (data.digestSchedule) setDigestSchedule(data.digestSchedule);
                 }
             } catch (e) {
                 console.error("Failed to load profile", e);
@@ -37,9 +41,17 @@ export default function Onboarding() {
         );
     };
 
+    const toggleFocus = (area: string) => {
+        setFocusAreas(prev =>
+            prev.includes(area)
+                ? prev.filter(a => a !== area)
+                : [...prev, area]
+        );
+    };
+
     const handleContinue = async () => {
-        if (step === 1) {
-            setStep(2);
+        if (step < 4) {
+            setStep(step + 1);
         } else {
             // Save settings to Backend
             setLoading(true);
@@ -47,7 +59,7 @@ export default function Onboarding() {
                 await fetch('/api/user/profile', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ role, selectedRepos })
+                    body: JSON.stringify({ role, selectedRepos, focusAreas, digestSchedule })
                 });
                 router.push('/dashboard');
             } catch (e) {
@@ -60,22 +72,21 @@ export default function Onboarding() {
     };
 
     return (
-        <div style={{ maxWidth: '800px', margin: '0 auto', paddingTop: '4rem' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', paddingTop: '4rem', paddingBottom: '4rem' }}>
             {/* Step Indicator */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '3rem' }}>
-                <div style={{
-                    width: 32, height: 32, borderRadius: '50%',
-                    background: step >= 1 ? '#000' : '#e2e8f0',
-                    color: step >= 1 ? '#fff' : '#64748b',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600
-                }}>1</div>
-                <div style={{ flex: 1, height: 2, background: step >= 2 ? '#000' : '#e2e8f0' }}></div>
-                <div style={{
-                    width: 32, height: 32, borderRadius: '50%',
-                    background: step >= 2 ? '#000' : '#e2e8f0',
-                    color: step >= 2 ? '#fff' : '#64748b',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600
-                }}>2</div>
+                {[1, 2, 3, 4].map((s) => (
+                    <div key={s} style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: s < 4 ? 1 : 'unset' }}>
+                        <div style={{
+                            width: 32, height: 32, borderRadius: '50%',
+                            background: step >= s ? '#0f172a' : '#e2e8f0',
+                            color: step >= s ? '#fff' : '#64748b',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600,
+                            flexShrink: 0
+                        }}>{s}</div>
+                        {s < 4 && <div style={{ flex: 1, height: 2, background: step > s ? '#0f172a' : '#e2e8f0' }}></div>}
+                    </div>
+                ))}
             </div>
 
             {step === 1 && (
@@ -93,7 +104,7 @@ export default function Onboarding() {
                                 key={option.value}
                                 onClick={() => setRole(option.value)}
                                 style={{
-                                    border: role === option.value ? '2px solid #000' : '1px solid #e2e8f0',
+                                    border: role === option.value ? '2px solid #0f172a' : '1px solid #e2e8f0',
                                     borderRadius: '16px',
                                     padding: '1.5rem',
                                     cursor: 'pointer',
@@ -119,6 +130,76 @@ export default function Onboarding() {
                 </div>
             )}
 
+            {step === 3 && (
+                <div>
+                    <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '1rem', color: '#0f172a' }}>Focus Areas</h1>
+                    <p style={{ fontSize: '1.1rem', color: '#64748b', marginBottom: '2.5rem' }}>Select the topics you want to prioritize in your feed.</p>
+
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+                        {[
+                            'Security & Vulnerabilities',
+                            'Performance',
+                            'New Features',
+                            'Bug Fixes',
+                            'Refactoring',
+                            'Documentation',
+                            'CI/CD Pipelines',
+                            'Design Systems'
+                        ].map((area) => (
+                            <div
+                                key={area}
+                                onClick={() => toggleFocus(area)}
+                                style={{
+                                    padding: '0.75rem 1.5rem',
+                                    borderRadius: '50px',
+                                    border: focusAreas.includes(area) ? '2px solid #0f172a' : '1px solid #e2e8f0',
+                                    background: focusAreas.includes(area) ? '#0f172a' : '#fff',
+                                    color: focusAreas.includes(area) ? '#fff' : '#64748b',
+                                    fontWeight: 600,
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s'
+                                }}
+                            >
+                                {area}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {step === 4 && (
+                <div>
+                    <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '1rem', color: '#0f172a' }}>Digest Schedule</h1>
+                    <p style={{ fontSize: '1.1rem', color: '#64748b', marginBottom: '2.5rem' }}>When would you like to receive your daily summary?</p>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                        {[
+                            { value: 'morning', label: '🌞 Morning Briefing', time: '8:00 AM', desc: 'Start your day with a fresh update.' },
+                            { value: 'evening', label: '🌙 Evening Wrap-up', time: '5:00 PM', desc: 'Recap what happened before you sign off.' },
+                        ].map((option) => (
+                            <div
+                                key={option.value}
+                                onClick={() => setDigestSchedule(option.value)}
+                                style={{
+                                    border: digestSchedule === option.value ? '2px solid #0f172a' : '1px solid #e2e8f0',
+                                    borderRadius: '16px',
+                                    padding: '1.5rem',
+                                    cursor: 'pointer',
+                                    opacity: digestSchedule === option.value ? 1 : 0.7,
+                                    transition: 'all 0.2s'
+                                }}
+                            >
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                    <div style={{ fontSize: '1.1rem', fontWeight: 600, color: '#0f172a' }}>{option.label}</div>
+                                    <div style={{ fontSize: '0.9rem', fontWeight: 700, background: '#f1f5f9', padding: '0.25rem 0.5rem', borderRadius: '8px' }}>{option.time}</div>
+                                </div>
+                                <div style={{ fontSize: '0.9rem', color: '#64748b' }}>{option.desc}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             <button
                 onClick={handleContinue}
                 disabled={loading}
@@ -133,11 +214,12 @@ export default function Onboarding() {
                     fontSize: '1rem',
                     fontWeight: 600,
                     cursor: loading ? 'not-allowed' : 'pointer',
-                    marginTop: '2rem',
-                    opacity: loading ? 0.7 : 1
+                    marginTop: '3rem',
+                    opacity: loading ? 0.7 : 1,
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                 }}
             >
-                {loading ? 'Saving...' : (step === 1 ? 'Next: Connect Repositories' : 'Finish Setup')}
+                {loading ? 'Saving...' : (step === 4 ? 'Finish Setup' : 'Continue')}
             </button>
         </div>
     );

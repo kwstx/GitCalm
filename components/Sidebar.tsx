@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 
 export default function Sidebar() {
     const pathname = usePathname();
@@ -74,16 +75,31 @@ export default function Sidebar() {
             </nav>
 
             {/* User Profile Stub */}
-            <div style={{ padding: '1.5rem', borderTop: '1px solid #f1f5f9' }}>
+            <div style={{ padding: '1.5rem', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#64748b' }}>U</span>
                     </div>
-                    <div>
-                        <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#0f172a' }}>User</div>
-                        <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Free Plan</div>
-                    </div>
                 </div>
+
+                <button
+                    onClick={() => signOut({ callbackUrl: '/' })}
+                    style={{
+                        background: 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
+                        padding: '8px',
+                        color: '#ef4444',
+                        borderRadius: '8px',
+                        transition: 'background 0.2s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                    title="Log Out"
+                >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                </button>
             </div>
         </aside>
     );

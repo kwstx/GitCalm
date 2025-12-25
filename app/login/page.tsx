@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { signIn } from "@/auth";
 
 export default function Login() {
@@ -113,11 +114,15 @@ export default function Login() {
                     </Link>
 
                     <div style={{ marginBottom: '3rem' }}>
-                        <div style={{ display: 'flex', gap: '4px', alignItems: 'center', marginBottom: '1.5rem' }}>
-                            <div style={{ width: 8, height: 8, background: '#000', borderRadius: '50%' }}></div>
-                            <div style={{ width: 8, height: 8, background: '#000', borderRadius: '50%', opacity: 0.5 }}></div>
-                            <div style={{ width: 8, height: 8, background: '#000', borderRadius: '50%', opacity: 0.25 }}></div>
-                            <span style={{ marginLeft: '0.5rem', fontSize: '1.1rem', fontWeight: 700, letterSpacing: '-0.02em', color: '#000' }}>GitCalm</span>
+                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '1.5rem' }}>
+                            <Image
+                                src="/logo.svg"
+                                alt="GitCalm Logo"
+                                width={42}
+                                height={24}
+                                style={{ objectFit: 'contain' }}
+                            />
+                            <span style={{ fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.02em', color: '#000' }}>GitCalm</span>
                         </div>
                         <h1 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.03em', color: '#0f172a', lineHeight: 1.1, marginBottom: '0.75rem' }}>
                             Welcome back to flow.
@@ -158,7 +163,7 @@ export default function Login() {
                     </form>
 
                     <p style={{ textAlign: 'center', fontSize: '0.9rem', color: '#94a3b8' }}>
-                        By clicking continue, you agree to our <a href="#" style={{ color: '#111', textDecoration: 'none', fontWeight: 500 }}>Terms</a> and <a href="#" style={{ color: '#111', textDecoration: 'none', fontWeight: 500 }}>Privacy Policy</a>.
+                        By clicking continue, you acknowledge our <a href="/privacy" style={{ color: '#111', textDecoration: 'none', fontWeight: 500 }}>No Tracking Policy</a> and <a href="/open-source" style={{ color: '#111', textDecoration: 'none', fontWeight: 500 }}>Open Source License</a>.
                     </p>
                 </div>
             </div>

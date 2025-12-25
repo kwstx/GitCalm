@@ -1,0 +1,11 @@
+{
+  "name": "User Account",
+  "email": "user@example.com",
+  "nickname": "",
+  "avatarUrl": "",
+  "plan": "Free",
+  "role": "ic",
+  "selectedRepos": [
+    "repo_2"
+  ]
+}

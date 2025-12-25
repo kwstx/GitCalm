@@ -11,7 +11,7 @@ interface UseGitHubEventsResult {
 /**
  * Hook to fetch and process GitHub events for selected repositories
  */
-export function useGitHubEvents(repos: string[]): UseGitHubEventsResult {
+export function useGitHubEvents(repos: string[], dateRange?: { start: Date; end: Date }): UseGitHubEventsResult {
     const [events, setEvents] = useState<ProcessedEvent[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -26,12 +26,17 @@ export function useGitHubEvents(repos: string[]): UseGitHubEventsResult {
         setError(null);
 
         try {
+            const body: any = { repos };
+            if (dateRange) {
+                body.startDate = dateRange.start.toISOString();
+            }
+
             const response = await fetch('/api/github/events', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ repos }),
+                body: JSON.stringify(body),
             });
 
             if (!response.ok) {
@@ -44,6 +49,8 @@ export function useGitHubEvents(repos: string[]): UseGitHubEventsResult {
             console.log('[useGitHubEvents] Processed events received:', data?.length || 0);
 
             // Data is already processed and categorized by the server
+            // Note: Server filters by 'startDate'. We could optionally filter by 'endDate' here if needed,
+            // but usually we want "everything since X".
             setEvents(data || []);
         } catch (err) {
             const message = err instanceof Error ? err.message : 'An error occurred';
@@ -56,7 +63,7 @@ export function useGitHubEvents(repos: string[]): UseGitHubEventsResult {
 
     useEffect(() => {
         fetchEvents();
-    }, [repos.join(',')]); // Re-fetch when repos change
+    }, [repos.join(','), dateRange?.start.toISOString()]); // Re-fetch when repos or start date changes
 
     return {
         events,

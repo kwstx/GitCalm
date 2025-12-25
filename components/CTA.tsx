@@ -7,10 +7,10 @@ export default function CTA() {
                 <div style={{ position: 'relative', zIndex: 2 }}>
                     <h2 style={{ fontSize: 'var(--font-h2)', marginBottom: '1.5rem' }}>Ready to regain your focus?</h2>
                     <p style={{ fontSize: '1.25rem', opacity: 0.7, maxWidth: '600px', margin: '0 auto 2.5rem' }}>
-                        Join thousands of developers who have switched to a calmer workflow.
+                        Experience a calmer workflow designed for modern engineering.
                     </p>
-                    <Link href="/login" className="btn btn-primary" style={{ padding: '1rem 3rem', fontSize: '1.2rem' }}>
-                        Get Started for Free
+                    <Link href="/login" className="btn btn-primary" style={{ padding: '1rem 3rem', fontSize: '1.2rem', textDecoration: 'none' }}>
+                        Get Started
                     </Link>
                 </div>
 

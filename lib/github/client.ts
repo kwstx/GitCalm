@@ -17,7 +17,8 @@ export async function fetchRepoEvents(
     octokit: Octokit,
     owner: string,
     repo: string,
-    perPage: number = 30
+    perPage: number = 30,
+    since?: string
 ) {
     try {
         const { data } = await octokit.activity.listRepoEvents({
@@ -25,6 +26,13 @@ export async function fetchRepoEvents(
             repo,
             per_page: perPage,
         });
+
+        // Manual filter for Activity API which doesn't strictly support 'since'
+        if (since) {
+            const sinceDate = new Date(since);
+            return data.filter((item) => item.created_at && new Date(item.created_at) >= sinceDate);
+        }
+
         return data;
     } catch (error) {
         console.error(`Error fetching events for ${owner}/${repo}:`, error);
@@ -39,7 +47,8 @@ export async function fetchPullRequests(
     octokit: Octokit,
     owner: string,
     repo: string,
-    state: 'open' | 'closed' | 'all' = 'all'
+    state: 'open' | 'closed' | 'all' = 'all',
+    since?: string
 ) {
     try {
         const { data } = await octokit.pulls.list({
@@ -50,6 +59,12 @@ export async function fetchPullRequests(
             direction: 'desc',
             per_page: 20,
         });
+
+        if (since) {
+            const sinceDate = new Date(since);
+            return data.filter((pr) => new Date(pr.updated_at) >= sinceDate);
+        }
+
         return data;
     } catch (error) {
         console.error(`Error fetching PRs for ${owner}/${repo}:`, error);
@@ -64,7 +79,8 @@ export async function fetchIssues(
     octokit: Octokit,
     owner: string,
     repo: string,
-    state: 'open' | 'closed' | 'all' = 'all'
+    state: 'open' | 'closed' | 'all' = 'all',
+    since?: string
 ) {
     try {
         const { data } = await octokit.issues.listForRepo({
@@ -74,6 +90,7 @@ export async function fetchIssues(
             sort: 'updated',
             direction: 'desc',
             per_page: 20,
+            since, // Natively supported
         });
         return data;
     } catch (error) {
@@ -88,7 +105,8 @@ export async function fetchIssues(
 export async function fetchWorkflowRuns(
     octokit: Octokit,
     owner: string,
-    repo: string
+    repo: string,
+    since?: string
 ) {
     try {
         const { data } = await octokit.actions.listWorkflowRunsForRepo({
@@ -96,6 +114,12 @@ export async function fetchWorkflowRuns(
             repo,
             per_page: 20,
         });
+
+        if (since) {
+            const sinceDate = new Date(since);
+            return data.workflow_runs.filter((run) => new Date(run.updated_at) >= sinceDate);
+        }
+
         return data.workflow_runs;
     } catch (error) {
         console.error(`Error fetching workflow runs for ${owner}/${repo}:`, error);

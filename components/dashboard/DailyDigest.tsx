@@ -41,23 +41,51 @@ const MOCK_STORIES = [
     },
 ] as any[];
 
-// Mock repos for now - in production, this would come from user preferences
-const SELECTED_REPOS = [
-    'vercel/next.js',
-    'facebook/react',
-];
-
 export default function DailyDigest() {
     const [selectedCategory, setSelectedCategory] = useState<StoryType | null>(null);
     const [selectedStory, setSelectedStory] = useState<ProcessedEvent | null>(null);
-    const { events: apiEvents, loading, error, refetch } = useGitHubEvents(SELECTED_REPOS);
-    const [useDemoData, setUseDemoData] = useState(false);
+    const [repos, setRepos] = useState<string[]>([]);
+    const [reposLoading, setReposLoading] = useState(true);
+
+    // Fetch user preference on mount
+    useEffect(() => {
+        console.log('[DailyDigest] Fetching user profile...');
+        fetch('/api/user/profile')
+            .then(res => res.json())
+            .then(data => {
+                console.log('[DailyDigest] Profile loaded:', data);
+                if (data.selectedRepos && data.selectedRepos.length > 0) {
+                    setRepos(data.selectedRepos);
+                }
+                setReposLoading(false);
+            })
+            .catch((err) => {
+                console.error('[DailyDigest] Profile fetch failed:', err);
+                setReposLoading(false);
+            });
+    }, []);
 
     // Date Filtering State (Default: Last 7 days)
     const [dateRange, setDateRange] = useState({
         start: new Date(new Date().setDate(new Date().getDate() - 7)),
         end: new Date()
     });
+
+    const { events: apiEvents, loading: eventsLoading, error, refetch } = useGitHubEvents(repos, dateRange);
+    const loading = reposLoading || eventsLoading;
+
+    // Safety timeout to prevent infinite loading
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (loading) {
+                console.warn('[DailyDigest] Fetch timed out, forcing fallback.');
+                setReposLoading(false);
+            }
+        }, 8000); // 8 seconds timeout
+        return () => clearTimeout(timer);
+    }, [loading]);
+
+    const [useDemoData, setUseDemoData] = useState(false);
 
     // Fallback to mock data if API fails or demo mode is active
     const rawEvents = (error || useDemoData) && apiEvents.length === 0 ? MOCK_STORIES : apiEvents;
@@ -190,8 +218,26 @@ export default function DailyDigest() {
                 </div>
             )}
 
+            {/* Empty State: No Repos Selected */}
+            {!loading && !error && !useDemoData && repos.length === 0 && (
+                <div style={{ textAlign: 'center', padding: '4rem 2rem', border: '2px dashed #e2e8f0', borderRadius: '24px', color: '#64748b' }}>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem', color: '#0f172a' }}>No repositories connected</h3>
+                    <p style={{ marginBottom: '1.5rem' }}>Connect your GitHub repositories to start seeing your daily digest.</p>
+                    <a href="/dashboard/onboarding" style={{
+                        background: '#0f172a',
+                        color: '#fff',
+                        padding: '0.75rem 1.5rem',
+                        borderRadius: '12px',
+                        textDecoration: 'none',
+                        fontWeight: 600
+                    }}>
+                        Connect Repositories
+                    </a>
+                </div>
+            )}
+
             {/* The Feed */}
-            {!loading && selectedCategory ? (
+            {!loading && (repos.length > 0 || useDemoData) && selectedCategory ? (
                 <div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
                         <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a' }}>
@@ -239,6 +285,22 @@ export default function DailyDigest() {
                             >
                                 🔄 Refresh
                             </button>
+                            <a href="/dashboard/onboarding" style={{
+                                background: '#f8fafc',
+                                border: '1px solid #e2e8f0',
+                                padding: '0.5rem 1rem',
+                                borderRadius: '20px',
+                                fontSize: '0.85rem',
+                                fontWeight: 600,
+                                color: '#64748b',
+                                cursor: 'pointer',
+                                textDecoration: 'none',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem'
+                            }}>
+                                ⚙️ Manage Repos
+                            </a>
                         </div>
                     </div>
 
