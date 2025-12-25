@@ -265,8 +265,7 @@ h3 {
   position: relative;
   perspective: 1000px;
   margin-top: 2rem;
-  /* On mobile, we might want to scale this whole thing down */
-  transform: scale(0.6);
+  /* transform: scale(0.6); REMOVED */
   transform-origin: center top;
 }
 
@@ -274,6 +273,7 @@ h3 {
   .hero-cards-container {
     height: 550px;
     margin-top: -2rem;
+    transform: none;
   }
 }
 
