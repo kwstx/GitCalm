@@ -122,7 +122,7 @@ export default function Hero() {
                 <div className="card" style={{
                     position: 'absolute',
                     top: '5%',
-                    left: '28%', // Moved inwards
+                    left: '20%',
                     transform: 'translateX(-50%) rotateX(35deg) rotateZ(45deg)',
                     width: '240px',
                     height: '240px',
@@ -146,7 +146,7 @@ export default function Hero() {
                 <div className="card" style={{
                     position: 'absolute',
                     top: '5%',
-                    right: '28%', // Moved inwards
+                    right: '20%',
                     transform: 'translateX(50%) rotateX(35deg) rotateZ(45deg)',
                     width: '240px',
                     height: '240px',
@@ -170,8 +170,8 @@ export default function Hero() {
                 {/* Left Outer Card */}
                 <div className="card" style={{
                     position: 'absolute',
-                    top: '-5%', // Lowered from -15%
-                    left: '10%', // Fixed from 1%
+                    top: '-15%',
+                    left: '1%',
                     transform: 'translateX(-50%) rotateX(35deg) rotateZ(45deg)',
                     width: '200px',
                     height: '200px',
@@ -197,8 +197,8 @@ export default function Hero() {
                 {/* Right Outer Card */}
                 <div className="card" style={{
                     position: 'absolute',
-                    top: '-5%', // Lowered from -15%
-                    right: '10%', // Fixed from 1%
+                    top: '-15%',
+                    right: '1%',
                     transform: 'translateX(50%) rotateX(35deg) rotateZ(45deg)',
                     width: '200px',
                     height: '200px',
