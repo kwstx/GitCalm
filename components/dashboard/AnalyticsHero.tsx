@@ -32,7 +32,7 @@ interface AnalyticsHeroProps {
 export default function AnalyticsHero({
     onSelectCategory,
     selectedCategory,
-    counts,
+    counts = { success: 0, warning: 0, info: 0 },
     loading = false,
     dateRange,
     onDateChange
