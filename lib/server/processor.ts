@@ -92,12 +92,12 @@ export async function processGitHubDataServer(rawData: any[]): Promise<Processed
                     title: isMerged
                         ? `PR #${pr.number} merged: ${pr.title}`
                         : `PR #${pr.number}: ${pr.title}`,
-                    summary: summaryResult ? summaryResult.summary : `Pull request by ${pr.user.login}. ${aiResult.reason}`,
+                    summary: (summaryResult && summaryResult.summary) ? summaryResult.summary : `Pull request by ${pr.user.login}. ${aiResult.reason}`,
                     timestamp: pr.updated_at,
                     repo: repoName,
                     url: pr.html_url,
                     priority,
-                    impact: summaryResult ? summaryResult.impact : impact,
+                    impact: (summaryResult && summaryResult.impact) ? summaryResult.impact : impact,
                     priorityReason: aiResult.reason,
                 });
             }
