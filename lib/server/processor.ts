@@ -24,20 +24,19 @@ export async function processGitHubDataServer(rawData: any[]): Promise<Processed
                 const aiText = `Title: ${pr.title}. ${pr.body ? 'Description: ' + pr.body.substring(0, 200) : ''}`;
 
                 // Get AI classification
+                // Get AI classification
                 let aiResult;
-                let geminiResult = null;
-                const hasGemini = !!process.env.GEMINI_API_KEY;
+                let summaryResult = null;
 
                 try {
-                    // Hybrid Approach: Use logic/keywords for categorization (fast & consistent)
-                    // Use LLM for "Human Summary" (rich & readable)
-
                     // 1. Fast Classification
                     aiResult = await interpretEvent(aiText);
 
-                    // 2. Rich Summarization (if Key exists)
-                    if (hasGemini) {
-                        geminiResult = await generateEventSummary(pr.title, pr.body, 'pr');
+                    // 2. Local AI Summarization (Hybrid Approach)
+                    // Only run for Merged PRs or if the classifier found something interesting (score > 0.8)
+                    // This prevents spamming the local LLM for every single item
+                    if (isMerged || aiResult.score > 0.8) {
+                        summaryResult = await generateLocalSummary(pr.title, pr.body);
                     }
 
                 } catch (e) {
