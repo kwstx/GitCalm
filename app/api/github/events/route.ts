@@ -98,9 +98,10 @@ export async function POST(request: Request) {
         });
 
     } catch (error) {
-        console.error('Error in /api/github/events:', error);
+        console.error('CRITICAL Error in /api/github/events:', error);
+        // Return 500 but with JSON body so frontend doesn't just hang
         return NextResponse.json(
-            { error: 'Failed to fetch events' },
+            { error: 'Internal Server Error: Failed to process events', details: String(error) },
             { status: 500 }
         );
     }
