@@ -46,7 +46,8 @@ export default function DailyDigest() {
     const [selectedStory, setSelectedStory] = useState<ProcessedEvent | null>(null);
     const [repos, setRepos] = useState<string[]>([]);
     const [reposLoading, setReposLoading] = useState(true);
-    const [hideBots, setHideBots] = useState(false); // New Filter State
+    const [hideBots, setHideBots] = useState(false);
+    const [simpleMode, setSimpleMode] = useState(false); // New: Minimalist Mode
 
     // Fetch user preference on mount
     useEffect(() => {
@@ -411,24 +412,62 @@ export default function DailyDigest() {
                             >
                                 {hideBots ? '🤖 Bots Hidden' : '🤖 Show Bots'}
                             </button>
+
+                            <button
+                                onClick={() => setSimpleMode(!simpleMode)}
+                                style={{
+                                    background: simpleMode ? '#e0f2fe' : '#f8fafc',
+                                    border: `1px solid ${simpleMode ? '#0ea5e9' : '#e2e8f0'}`,
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: '20px',
+                                    fontSize: '0.85rem',
+                                    fontWeight: 600,
+                                    color: simpleMode ? '#0284c7' : '#64748b',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '6px'
+                                }}
+                            >
+                                {simpleMode ? '👓 Minimal View' : '👓 Detail View'}
+                            </button>
                         </div>
                     </div>
 
                     {filteredEvents.length > 0 ? (
                         <>
-                            {filteredEvents.map(event => (
-                                <StoryCard
-                                    key={event.id}
-                                    type={event.category}
-                                    title={event.title}
-                                    summary={event.summary}
-                                    timestamp={formatTimestamp(event.timestamp)}
-                                    repo={event.repo}
-                                    impact={event.impact}
-                                    priorityReason={event.priorityReason}
-                                    onClick={() => setSelectedStory(event)}
-                                />
-                            ))}
+                            {filteredEvents.map(event => {
+                                // Simple View Transformation
+                                let title = event.title;
+                                let summary = event.summary;
+                                let timestamp = formatTimestamp(event.timestamp);
+
+                                if (simpleMode) {
+                                    // Remove "PR #123 merged: " prefix
+                                    title = title.replace(/PR #\d+ merged: /, '').replace(/Issue #\d+: /, '');
+                                    // Make summary concise (first sentence only)
+                                    summary = summary.split('.')[0] + '.';
+                                    // Simplify timestamp
+                                    if (timestamp.includes('mins') || timestamp.includes('hours')) {
+                                        timestamp = 'Today';
+                                    }
+                                }
+
+                                return (
+                                    <StoryCard
+                                        key={event.id}
+                                        type={event.category}
+                                        title={title}
+                                        summary={summary}
+                                        timestamp={timestamp}
+                                        repo={event.repo}
+                                        impact={event.impact}
+                                        priorityReason={simpleMode ? undefined : event.priorityReason} // Hide noisy badge in simple mode
+                                        onClick={() => setSelectedStory(event)}
+                                    />
+                                );
+                            })}
 
                             <div style={{ textAlign: 'center', marginTop: '3rem', paddingBottom: '3rem' }}>
                                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#94a3b8', fontSize: '0.9rem' }}>
