@@ -603,8 +603,55 @@ h3 {
     gap: 4rem;
   }
 
+
   .device-sticky-wrapper {
     position: sticky;
     top: 120px;
+  }
+}
+
+/* Login Page Responsiveness */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  font-family: sans-serif;
+  background: #fff;
+  flex-direction: column;
+}
+
+.login-left-panel {
+  display: none;
+}
+
+.login-right-panel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  min-height: 100vh;
+}
+
+@media (min-width: 1024px) {
+  .login-container {
+    flex-direction: row;
+  }
+
+  .login-left-panel {
+    display: flex;
+    width: 50%;
+    background: #f8fafc;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .login-right-panel {
+    width: 50%;
+    padding: 4rem;
+    min-height: auto;
   }
 }
