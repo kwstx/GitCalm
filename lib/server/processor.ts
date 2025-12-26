@@ -10,8 +10,37 @@ export async function processGitHubDataServer(rawData: any[]): Promise<Processed
     const events: ProcessedEvent[] = [];
 
     for (const repoData of rawData) {
-        const { repo, pullRequests, issues, workflows } = repoData;
+        const { repo, pullRequests, issues, workflows, events: rawEvents } = repoData;
         const repoName = repo.split('/')[1] || repo;
+
+        // Process Direct Commits (PushEvents)
+        // Ideally we only show these if they aren't part of a PR, but for now show all to ensure visibility.
+        if (rawEvents) {
+            for (const event of rawEvents) {
+                if (event.type === 'PushEvent') {
+                    const commitCount = event.payload.size || 1;
+                    const branch = event.payload.ref?.replace('refs/heads/', '') || 'unknown';
+                    const message = event.payload.commits?.[0]?.message || 'Pushed code';
+
+                    // Skip bots
+                    if (event.actor.login.includes('[bot]')) continue;
+
+                    events.push({
+                        id: `push-${event.id}`,
+                        type: 'commit',
+                        category: 'info',
+                        title: `Pushed ${commitCount} commit${commitCount > 1 ? 's' : ''} to ${branch}`,
+                        summary: `Latest: "${message.split('\n')[0]}"`,
+                        timestamp: event.created_at,
+                        repo: repoName,
+                        url: `https://github.com/${repo}/commits/${branch}`, // Approximate link
+                        priority: 'low',
+                        impact: 'Code Update',
+                        priorityReason: 'Direct commit to branch'
+                    });
+                }
+            }
+        }
 
         // Process Pull Requests
         if (pullRequests) {
