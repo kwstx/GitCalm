@@ -26,7 +26,7 @@ export async function processGitHubDataServer(rawData: any[]): Promise<Processed
                 // Get AI classification
                 // Get AI classification
                 let aiResult;
-                let summaryResult = null;
+                let summaryResult: { summary: string; impact: string } | null = null;
 
                 try {
                     // 1. Fast Classification
