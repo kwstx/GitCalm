@@ -46,14 +46,17 @@ export default function DailyDigest({ initialProfile }: { initialProfile?: any }
     const [selectedStory, setSelectedStory] = useState<ProcessedEvent | null>(null);
     const [repos, setRepos] = useState<string[]>([]);
     const [reposLoading, setReposLoading] = useState(true);
+    const [reposLoading, setReposLoading] = useState(true);
     const [hideBots, setHideBots] = useState(false);
-    const [simpleMode, setSimpleMode] = useState(false); // New: Minimalist Mode
+    const [simpleMode, setSimpleMode] = useState(false);
+    const [focusAreas, setFocusAreas] = useState<string[]>([]); // New: User Focus Areas
 
     // Initialize state from server-provided profile (best performance)
     useEffect(() => {
         if (initialProfile) {
             console.log('[DailyDigest] Using server-provided profile:', initialProfile);
             if (initialProfile.selectedRepos) setRepos(initialProfile.selectedRepos);
+            if (initialProfile.focusAreas) setFocusAreas(initialProfile.focusAreas);
             setReposLoading(false);
         } else {
             // Fallback for standalone usage (though rare now)
@@ -62,6 +65,7 @@ export default function DailyDigest({ initialProfile }: { initialProfile?: any }
                 .then(res => res.json())
                 .then(data => {
                     if (data.selectedRepos) setRepos(data.selectedRepos);
+                    if (data.focusAreas) setFocusAreas(data.focusAreas);
                     setReposLoading(false);
                 })
                 .catch(err => {
@@ -125,10 +129,33 @@ export default function DailyDigest({ initialProfile }: { initialProfile?: any }
         info: updates.length,
     };
 
+    // Match and Sort events by Focus Areas
+    // If an event matches a user's focus area (e.g. "Security"), it gets prioritized
+    const getFocusMatch = (event: ProcessedEvent) => {
+        if (!focusAreas || focusAreas.length === 0) return null;
+        const txt = (event.title + event.summary + (event.impact || '')).toLowerCase();
+
+        // Check for direct match of the Focus Area name (e.g. "Security")
+        // Or simpler inclusion
+        for (const area of focusAreas) {
+            const keyword = area.split(' ')[0].toLowerCase(); // "Security & Vulnerabilities" -> "security"
+            if (txt.includes(keyword)) return area;
+        }
+        return null;
+    };
+
     // Filter events by selected category
     const filteredEvents = selectedCategory
         ? events.filter(event => event.category === selectedCategory)
         : [];
+
+    // Sort: Focus Matches FIRST, then Newest
+    filteredEvents.sort((a, b) => {
+        const aFocus = getFocusMatch(a) ? 1 : 0;
+        const bFocus = getFocusMatch(b) ? 1 : 0;
+        if (aFocus !== bFocus) return bFocus - aFocus; // Focused items first
+        return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(); // Then chronological
+    });
 
     // Format timestamp to relative time
     const formatTimestamp = (timestamp: string) => {
@@ -445,7 +472,8 @@ export default function DailyDigest({ initialProfile }: { initialProfile?: any }
                                         timestamp={timestamp}
                                         repo={event.repo}
                                         impact={event.impact}
-                                        priorityReason={simpleMode ? undefined : event.priorityReason} // Hide noisy badge in simple mode
+                                        priorityReason={simpleMode ? undefined : event.priorityReason}
+                                        focusArea={getFocusMatch(event)}
                                         onClick={() => setSelectedStory(event)}
                                     />
                                 );

@@ -10,10 +10,11 @@ interface StoryCardProps {
     repo: string;
     impact?: string;
     priorityReason?: string;
+    focusArea?: string | null; // New: Highlight matched focus area
     onClick?: () => void;
 }
 
-export default function StoryCard({ type, title, summary, timestamp, repo, impact, priorityReason, onClick }: StoryCardProps) {
+export default function StoryCard({ type, title, summary, timestamp, repo, impact, priorityReason, focusArea, onClick }: StoryCardProps) {
 
     const getTypeStyles = (t: StoryType) => {
         switch (t) {
@@ -127,17 +128,32 @@ export default function StoryCard({ type, title, summary, timestamp, repo, impac
                         <span style={{ fontSize: '0.85rem', color: '#94a3b8', fontWeight: 500 }}>{timestamp}</span>
                     </div>
 
-                    {impact && (
-                        <div
-                            title={priorityReason}
-                            style={{
-                                fontSize: '0.7rem', fontWeight: 700, color: style.iconColor,
-                                textTransform: 'uppercase', letterSpacing: '0.05em',
-                                background: style.iconBg, padding: '4px 8px', borderRadius: '6px'
-                            }}>
-                            {impact}
-                        </div>
-                    )}
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        {focusArea && (
+                            <div
+                                title="Matches your focus area"
+                                style={{
+                                    fontSize: '0.7rem', fontWeight: 700, color: '#fff',
+                                    textTransform: 'uppercase', letterSpacing: '0.05em',
+                                    background: 'linear-gradient(135deg, #4f46e5, #ec4899)', // Vivid gradient
+                                    padding: '4px 8px', borderRadius: '6px',
+                                    boxShadow: '0 2px 5px rgba(79, 70, 229, 0.3)'
+                                }}>
+                                🎯 {focusArea}
+                            </div>
+                        )}
+                        {impact && (
+                            <div
+                                title={priorityReason}
+                                style={{
+                                    fontSize: '0.7rem', fontWeight: 700, color: style.iconColor,
+                                    textTransform: 'uppercase', letterSpacing: '0.05em',
+                                    background: style.iconBg, padding: '4px 8px', borderRadius: '6px'
+                                }}>
+                                {impact}
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 {/* Content Body */}
