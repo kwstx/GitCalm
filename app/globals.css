@@ -525,3 +525,14 @@ h3 {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
 }
+
+/* Decorative Elements Visibility */
+.decorative-floating {
+  display: none !important;
+}
+
+@media (min-width: 1024px) {
+  .decorative-floating {
+    display: block !important;
+  }
+}
