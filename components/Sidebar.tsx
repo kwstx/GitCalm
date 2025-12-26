@@ -5,9 +5,13 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 
-export default function Sidebar() {
-    const pathname = usePathname();
+interface SidebarProps {
+    isOpen?: boolean;
+    onClose?: () => void;
+}
 
+export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
+    const pathname = usePathname();
     const isActive = (path: string) => pathname === path;
 
     const navItems = [
@@ -29,81 +33,137 @@ export default function Sidebar() {
     ];
 
     return (
-        <aside style={{
-            width: '260px',
-            height: '100vh',
-            background: '#fff',
-            borderRight: '1px solid #f1f5f9',
-            display: 'flex',
-            flexDirection: 'column',
-            position: 'fixed',
-            left: 0,
-            top: 0
-        }}>
-            {/* Brand */}
-            <div style={{ padding: '2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Image
-                    src="/logo.svg"
-                    alt="GitCalm Logo"
-                    width={28}
-                    height={28}
-                    style={{ objectFit: 'contain' }}
+        <>
+            {/* Mobile Backdrop */}
+            {isOpen && (
+                <div
+                    onClick={onClose}
+                    style={{
+                        position: 'fixed',
+                        inset: 0,
+                        background: 'rgba(0,0,0,0.4)',
+                        zIndex: 49,
+                        backdropFilter: 'blur(2px)'
+                    }}
                 />
-                <span style={{ fontSize: '1.1rem', fontWeight: 800, letterSpacing: '-0.02em', color: '#0f172a' }}>GitCalm</span>
-            </div>
+            )}
 
-            {/* Navigation */}
-            <nav style={{ flex: 1, padding: '0 1rem' }}>
-                <ul style={{ listStyle: 'none', padding: 0 }}>
-                    {navItems.map((item) => (
-                        <li key={item.path} style={{ marginBottom: '0.5rem' }}>
-                            <Link href={item.path} style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.75rem',
-                                padding: '0.75rem 1rem',
-                                borderRadius: '12px',
-                                textDecoration: 'none',
-                                color: isActive(item.path) ? '#0f172a' : '#64748b',
-                                background: isActive(item.path) ? '#f8fafc' : 'transparent',
-                                fontWeight: isActive(item.path) ? 600 : 500,
-                                transition: 'background 0.2s, color 0.2s'
-                            }}>
-                                <span style={{ opacity: isActive(item.path) ? 1 : 0.7 }}>{item.icon}</span>
-                                {item.label}
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-            </nav>
+            <aside
+                className={`sidebar ${isOpen ? 'open' : ''}`}
+                style={{
+                    width: '260px',
+                    height: '100vh',
+                    background: '#fff',
+                    borderRight: '1px solid #f1f5f9',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    position: 'fixed',
+                    left: 0,
+                    top: 0,
+                    zIndex: 50,
+                    transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+                }}>
+                <style jsx>{`
+                    /* Default Desktop Styles (Kept inline mostly) */
+                    
+                    /* Mobile Styles */
+                    @media (max-width: 768px) {
+                        .sidebar {
+                            transform: translateX(-100%);
+                        }
+                        .sidebar.open {
+                            transform: translateX(0);
+                            box-shadow: 10px 0 20px -10px rgba(0,0,0,0.1);
+                        }
+                    }
+                `}</style>
+                {/* Brand */}
+                <div style={{ padding: '2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <Image
+                        src="/logo.svg"
+                        alt="GitCalm Logo"
+                        width={28}
+                        height={28}
+                        style={{ objectFit: 'contain' }}
+                    />
+                    <span style={{ fontSize: '1.1rem', fontWeight: 800, letterSpacing: '-0.02em', color: '#0f172a' }}>GitCalm</span>
 
-            {/* User Profile Stub */}
-            <div style={{ padding: '1.5rem', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#64748b' }}>U</span>
-                    </div>
+                    {/* Close Button (Mobile Only) */}
+                    <button
+                        onClick={onClose}
+                        className="mobile-close"
+                        style={{
+                            marginLeft: 'auto',
+                            background: 'transparent',
+                            border: 'none',
+                            padding: '0.5rem',
+                            cursor: 'pointer',
+                            color: '#64748b'
+                        }}
+                    >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                    <style jsx>{`
+                    .mobile-close { display: none; }
+                    @media (max-width: 768px) {
+                        .mobile-close { display: block; }
+                    }
+                `}</style>
                 </div>
 
-                <button
-                    onClick={() => signOut({ callbackUrl: '/login' })}
-                    style={{
-                        background: 'transparent',
-                        border: 'none',
-                        cursor: 'pointer',
-                        padding: '8px',
-                        color: '#ef4444',
-                        borderRadius: '8px',
-                        transition: 'background 0.2s',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}
-                    title="Log Out"
-                >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                </button>
-            </div>
-        </aside>
+                {/* Navigation */}
+                <nav style={{ flex: 1, padding: '0 1rem' }}>
+                    <ul style={{ listStyle: 'none', padding: 0 }}>
+                        {navItems.map((item) => (
+                            <li key={item.path} style={{ marginBottom: '0.5rem' }}>
+                                <Link href={item.path} style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.75rem',
+                                    padding: '0.75rem 1rem',
+                                    borderRadius: '12px',
+                                    textDecoration: 'none',
+                                    color: isActive(item.path) ? '#0f172a' : '#64748b',
+                                    background: isActive(item.path) ? '#f8fafc' : 'transparent',
+                                    fontWeight: isActive(item.path) ? 600 : 500,
+                                    transition: 'background 0.2s, color 0.2s'
+                                }}>
+                                    <span style={{ opacity: isActive(item.path) ? 1 : 0.7 }}>{item.icon}</span>
+                                    {item.label}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
+
+                {/* User Profile Stub */}
+                <div style={{ padding: '1.5rem', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#64748b' }}>U</span>
+                        </div>
+                    </div>
+
+                    <button
+                        onClick={() => signOut({ callbackUrl: '/login' })}
+                        style={{
+                            background: 'transparent',
+                            border: 'none',
+                            cursor: 'pointer',
+                            padding: '8px',
+                            color: '#ef4444',
+                            borderRadius: '8px',
+                            transition: 'background 0.2s',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}
+                        title="Log Out"
+                    >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    </button>
+                </div>
+            </aside>
+        </>
     );
 }
