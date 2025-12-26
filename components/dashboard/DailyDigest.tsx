@@ -41,7 +41,7 @@ const MOCK_STORIES = [
     },
 ] as any[];
 
-export default function DailyDigest() {
+export default function DailyDigest({ initialProfile }: { initialProfile?: any }) {
     const [selectedCategory, setSelectedCategory] = useState<StoryType | null>(null);
     const [selectedStory, setSelectedStory] = useState<ProcessedEvent | null>(null);
     const [repos, setRepos] = useState<string[]>([]);
@@ -49,23 +49,27 @@ export default function DailyDigest() {
     const [hideBots, setHideBots] = useState(false);
     const [simpleMode, setSimpleMode] = useState(false); // New: Minimalist Mode
 
-    // Fetch user preference on mount
+    // Initialize state from server-provided profile (best performance)
     useEffect(() => {
-        console.log('[DailyDigest] Fetching user profile...');
-        fetch('/api/user/profile')
-            .then(res => res.json())
-            .then(data => {
-                console.log('[DailyDigest] Profile loaded:', data);
-                if (data.selectedRepos && data.selectedRepos.length > 0) {
-                    setRepos(data.selectedRepos);
-                }
-                setReposLoading(false);
-            })
-            .catch((err) => {
-                console.error('[DailyDigest] Profile fetch failed:', err);
-                setReposLoading(false);
-            });
-    }, []);
+        if (initialProfile) {
+            console.log('[DailyDigest] Using server-provided profile:', initialProfile);
+            if (initialProfile.selectedRepos) setRepos(initialProfile.selectedRepos);
+            setReposLoading(false);
+        } else {
+            // Fallback for standalone usage (though rare now)
+            console.log('[DailyDigest] Fetching user profile (client-side fallback)...');
+            fetch('/api/user/profile')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.selectedRepos) setRepos(data.selectedRepos);
+                    setReposLoading(false);
+                })
+                .catch(err => {
+                    console.error('Profile fetch failed', err);
+                    setReposLoading(false);
+                });
+        }
+    }, [initialProfile]);
 
     // Date Filtering State (Default: Last 7 days)
     const [dateRange, setDateRange] = useState({

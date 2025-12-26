@@ -12,6 +12,6 @@ export default async function Dashboard() {
     }
 
     return (
-        <DailyDigest />
+        <DailyDigest initialProfile={profile} />
     );
 }
