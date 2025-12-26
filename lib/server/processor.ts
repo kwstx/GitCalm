@@ -1,5 +1,7 @@
 import { ProcessedEvent } from '../github/types';
 import { interpretEvent } from '../ai/classifier';
+import { generateLocalSummary } from '../ai/local_llm';
+import { generateEventSummary } from '../ai/gemini';
 
 /**
  * Server-side processor for GitHub data
@@ -21,10 +23,23 @@ export async function processGitHubDataServer(rawData: any[]): Promise<Processed
                 // Limit body length to avoid excessive processing time
                 const aiText = `Title: ${pr.title}. ${pr.body ? 'Description: ' + pr.body.substring(0, 200) : ''}`;
 
-                // Get AI classification with extensive error handling
+                // Get AI classification
                 let aiResult;
+                let geminiResult = null;
+                const hasGemini = !!process.env.GEMINI_API_KEY;
+
                 try {
+                    // Hybrid Approach: Use logic/keywords for categorization (fast & consistent)
+                    // Use LLM for "Human Summary" (rich & readable)
+
+                    // 1. Fast Classification
                     aiResult = await interpretEvent(aiText);
+
+                    // 2. Rich Summarization (if Key exists)
+                    if (hasGemini) {
+                        geminiResult = await generateEventSummary(pr.title, pr.body, 'pr');
+                    }
+
                 } catch (e) {
                     console.error(`[Processor] AI Failed for PR ${pr.number}:`, e);
                     aiResult = {
@@ -76,12 +91,12 @@ export async function processGitHubDataServer(rawData: any[]): Promise<Processed
                     title: isMerged
                         ? `PR #${pr.number} merged: ${pr.title}`
                         : `PR #${pr.number}: ${pr.title}`,
-                    summary: `Pull request by ${pr.user.login}. ${aiResult.reason}`,
+                    summary: geminiResult ? geminiResult.summary : `Pull request by ${pr.user.login}. ${aiResult.reason}`,
                     timestamp: pr.updated_at,
                     repo: repoName,
                     url: pr.html_url,
                     priority,
-                    impact,
+                    impact: geminiResult ? geminiResult.impact : impact,
                     priorityReason: aiResult.reason,
                 });
             }
