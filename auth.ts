@@ -13,7 +13,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             authorization: {
                 params: {
                     prompt: "consent",
-                    scope: "read:user user:email repo" // Request access to private repos
+                    scope: "read:user user:email repo" // Explicitly request access to private repos (Force Deploy)
                 }
             },
         })
