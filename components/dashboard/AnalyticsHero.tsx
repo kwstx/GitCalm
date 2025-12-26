@@ -98,27 +98,36 @@ export default function AnalyticsHero({
                 </div>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-8 flex-wrap">
+            <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
                 {/* Left: Bubble Chart Visual */}
-                <div className="flex-1 min-w-[300px] relative h-auto md:h-[320px] flex flex-col md:block gap-4">
+                <div style={{ flex: 1, minWidth: '300px', position: 'relative', height: '320px' }}>
 
                     {/* Yellow Bubble (Outcome) */}
                     <div
                         onClick={() => handleCategoryClick('success')}
-                        className={`
-                            relative w-full md:absolute md:w-[240px] md:h-[240px] md:top-[10px] md:left-1/2 md:-translate-x-1/2
-                            rounded-3xl md:rounded-full
-                            flex flex-col items-center justify-center
-                            p-6 md:p-6
-                            transition-all duration-200
-                            cursor-pointer overflow-hidden
-                            text-center
-                        `}
                         style={{
+                            position: 'absolute',
+                            top: '10px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            width: '240px',
+                            height: '240px',
+                            borderRadius: '50%',
                             background: '#FCD34D',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '0.9rem',
+                            fontWeight: 500,
                             color: '#111',
                             zIndex: 1,
+                            cursor: getCursor(),
                             opacity: getOpacity('success'),
+                            transition: 'all 0.2s',
+                            overflow: 'hidden',
+                            padding: '1.5rem',
+                            textAlign: 'center',
                             boxShadow: selectedCategory === 'success' ? '0 10px 30px -5px rgba(251, 191, 36, 0.4)' : 'none'
                         }}
                     >
@@ -160,25 +169,26 @@ export default function AnalyticsHero({
                     {/* Red Bubble (Attention) */}
                     <div
                         onClick={() => handleCategoryClick('warning')}
-                        className={`
-                            relative w-full md:absolute md:w-[180px] md:h-[180px]
-                            rounded-3xl md:rounded-full
-                            flex flex-col items-center justify-center
-                            p-4
-                            transition-all duration-200
-                            cursor-pointer overflow-hidden
-                            text-center
-                        `}
                         style={{
-                            // Desktop Positioning
-                            ...(typeof window !== 'undefined' && window.innerWidth >= 768 ? {
-                                bottom: '10px',
-                                left: '5%',
-                            } : {}),
+                            position: 'absolute',
+                            bottom: '10px',
+                            left: '5%',
+                            width: '180px',
+                            height: '180px',
+                            borderRadius: '50%',
                             background: '#EF4444',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                             color: '#fff',
                             zIndex: 2,
                             opacity: 0.95 * getOpacity('warning'),
+                            cursor: getCursor(),
+                            transition: 'all 0.2s',
+                            padding: '1rem',
+                            textAlign: 'center',
+                            overflow: 'hidden',
                             boxShadow: selectedCategory === 'warning' ? '0 10px 30px -5px rgba(239, 68, 68, 0.4)' : 'none'
                         }}
                     >
@@ -218,26 +228,27 @@ export default function AnalyticsHero({
                     {/* Purple Bubble (Update) */}
                     <div
                         onClick={() => handleCategoryClick('info')}
-                        className={`
-                            relative w-full md:absolute md:w-[130px] md:h-[130px]
-                            rounded-3xl md:rounded-full
-                            flex flex-col items-center justify-center
-                            p-4
-                            transition-all duration-200
-                            cursor-pointer overflow-hidden
-                            text-center
-                        `}
                         style={{
-                            // Desktop Positioning
-                            ...(typeof window !== 'undefined' && window.innerWidth >= 768 ? {
-                                bottom: '30px',
-                                right: '10%',
-                            } : {}),
+                            position: 'absolute',
+                            bottom: '30px',
+                            right: '10%',
+                            width: '130px',
+                            height: '130px',
+                            borderRadius: '50%',
                             background: '#8B5CF6',
                             backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                             color: '#fff',
                             zIndex: 3,
+                            cursor: getCursor(),
                             opacity: getOpacity('info'),
+                            transition: 'all 0.2s',
+                            padding: '0.8rem',
+                            textAlign: 'center',
+                            overflow: 'hidden',
                             boxShadow: selectedCategory === 'info' ? '0 10px 30px -5px rgba(139, 92, 246, 0.4)' : 'none'
                         }}
                     >
