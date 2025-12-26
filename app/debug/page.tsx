@@ -31,7 +31,7 @@ export default function DebugPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     repos: profileData.selectedRepos,
-                    startDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+                    startDate: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString()
                 })
             });
 
