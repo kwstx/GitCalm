@@ -142,8 +142,10 @@ export default function DailyDigest() {
 
     // --- GAMIFICATION: CLEAN STREAK ---
     // Use real backend streak if available, otherwise default to 0 (or 12 for demo)
+    // -1 indicates "Perfect" (no failures found)
     const streakDays = useDemoData ? 12 : (streak ?? 0);
     const isStreakLoading = loading && streak === null;
+    const isPerfect = streakDays === -1;
 
     // --- BROWSER NOTIFICATIONS ---
     const [latestSeenId, setLatestSeenId] = useState<string | null>(null);
@@ -195,8 +197,8 @@ export default function DailyDigest() {
 
                 {/* Gamification Badge */}
                 <div style={{
-                    background: streakDays >= 3 ? '#DCFCE7' : '#FEE2E2',
-                    color: streakDays >= 3 ? '#166534' : '#991B1B',
+                    background: (streakDays >= 3 || isPerfect) ? '#DCFCE7' : '#FEE2E2',
+                    color: (streakDays >= 3 || isPerfect) ? '#166534' : '#991B1B',
                     padding: '0.5rem 1rem',
                     borderRadius: '16px',
                     fontWeight: 700,

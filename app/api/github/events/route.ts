@@ -77,8 +77,8 @@ export async function POST(request: Request) {
             const diffTime = Math.abs(now - mostRecentFailureTime);
             streakDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
         } else {
-            // If absolutely NO failures found in any repo ever (or API didn't return any)
-            streakDays = 30; // Cap at a high number
+            // Signal "No Failures Found" with -1 (Perfect Streak)
+            streakDays = -1;
         }
 
         // Process events server-side
