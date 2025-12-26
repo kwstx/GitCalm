@@ -46,7 +46,7 @@ export default function DailyDigest({ initialProfile }: { initialProfile?: any }
     const [selectedStory, setSelectedStory] = useState<ProcessedEvent | null>(null);
     const [repos, setRepos] = useState<string[]>([]);
     const [reposLoading, setReposLoading] = useState(true);
-    const [reposLoading, setReposLoading] = useState(true);
+
     const [hideBots, setHideBots] = useState(false);
     const [simpleMode, setSimpleMode] = useState(false);
     const [focusAreas, setFocusAreas] = useState<string[]>([]); // New: User Focus Areas
