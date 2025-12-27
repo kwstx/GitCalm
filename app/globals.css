@@ -567,7 +567,7 @@ h3 {
   width: 135px;
   height: 135px;
   position: absolute;
-  bottom: 60px;
+  bottom: 80px;
   /* Moved higher per user request */
   left: -5px;
   z-index: 2;
