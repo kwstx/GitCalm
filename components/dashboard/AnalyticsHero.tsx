@@ -294,62 +294,64 @@ export default function AnalyticsHero({
                     </div>
 
                     {/* Item 2: Attention */}
-                    className="analytics-stat-card"
-                    onClick={() => handleCategoryClick('warning')}
-                    style={{
-                        opacity: getOpacity('warning'),
-                    }}
+                    <div
+                        className="analytics-stat-card"
+                        onClick={() => handleCategoryClick('warning')}
+                        style={{
+                            opacity: getOpacity('warning'),
+                        }}
                     >
-                    <div style={{ fontSize: '0.85rem', color: '#6B7280', marginBottom: '0.5rem' }}>Attention</div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                        <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#111' }}>
-                            {loading ? '...' : counts.warning}
-                            <span style={{ fontSize: '0.9rem', color: '#6B7280', fontWeight: 500 }}>
-                                ({Math.round((counts.warning / (counts.success + counts.warning + counts.info)) * 100)}%)
+                        <div style={{ fontSize: '0.85rem', color: '#6B7280', marginBottom: '0.5rem' }}>Attention</div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#111' }}>
+                                {loading ? '...' : counts.warning}
+                                <span style={{ fontSize: '0.9rem', color: '#6B7280', fontWeight: 500 }}>
+                                    ({Math.round((counts.warning / (counts.success + counts.warning + counts.info)) * 100)}%)
+                                </span>
                             </span>
-                        </span>
+                        </div>
+                        <div style={{ width: '100%', height: '6px', background: '#E5E7EB', borderRadius: '3px' }}>
+                            <div style={{ width: `${(counts.warning / (counts.success + counts.warning + counts.info)) * 100}%`, height: '100%', background: '#EF4444', borderRadius: '3px' }}></div>
+                        </div>
                     </div>
-                    <div style={{ width: '100%', height: '6px', background: '#E5E7EB', borderRadius: '3px' }}>
-                        <div style={{ width: `${(counts.warning / (counts.success + counts.warning + counts.info)) * 100}%`, height: '100%', background: '#EF4444', borderRadius: '3px' }}></div>
-                    </div>
-                </div>
 
-                {/* Item 3: Update */}
-                className="analytics-stat-card"
-                onClick={() => handleCategoryClick('info')}
-                style={{
-                    opacity: getOpacity('info'),
-                }}
+                    {/* Item 3: Update */}
+                    <div
+                        className="analytics-stat-card"
+                        onClick={() => handleCategoryClick('info')}
+                        style={{
+                            opacity: getOpacity('info'),
+                        }}
                     >
-                <div style={{ fontSize: '0.85rem', color: '#6B7280', marginBottom: '0.5rem' }}>Update</div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                    <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#111' }}>
-                        {loading ? '...' : counts.info}
-                        <span style={{ fontSize: '0.9rem', color: '#6B7280', fontWeight: 500 }}>
-                            ({Math.round((counts.info / (counts.success + counts.warning + counts.info)) * 100)}%)
-                        </span>
-                    </span>
+                        <div style={{ fontSize: '0.85rem', color: '#6B7280', marginBottom: '0.5rem' }}>Update</div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#111' }}>
+                                {loading ? '...' : counts.info}
+                                <span style={{ fontSize: '0.9rem', color: '#6B7280', fontWeight: 500 }}>
+                                    ({Math.round((counts.info / (counts.success + counts.warning + counts.info)) * 100)}%)
+                                </span>
+                            </span>
+                        </div>
+                        <div style={{ width: '100%', height: '6px', background: '#E5E7EB', borderRadius: '3px', }}>
+                            <div style={{ width: `${(counts.info / (counts.success + counts.warning + counts.info)) * 100}%`, height: '100%', background: '#8B5CF6', borderRadius: '3px', backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.2) 10px, rgba(255,255,255,0.2) 20px)' }}></div>
+                        </div>
+                    </div>
                 </div>
-                <div style={{ width: '100%', height: '6px', background: '#E5E7EB', borderRadius: '3px', }}>
-                    <div style={{ width: `${(counts.info / (counts.success + counts.warning + counts.info)) * 100}%`, height: '100%', background: '#8B5CF6', borderRadius: '3px', backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.2) 10px, rgba(255,255,255,0.2) 20px)' }}></div>
-                </div>
-            </div>
-        </div>
             </div >
 
-        {/* Bottom Floating Toast */ }
-        < div style = {{
-        marginTop: '1.5rem',
-            background: '#F9FAFB',
+            {/* Bottom Floating Toast */}
+            < div style={{
+                marginTop: '1.5rem',
+                background: '#F9FAFB',
                 borderRadius: '50px',
-                    padding: '0.5rem 0.5rem 0.5rem 0.75rem',
-                        display: 'inline-flex',
-                            alignItems: 'center',
-                                gap: '1rem',
-                                    fontSize: '0.9rem',
-                                        color: '#374151'
-    }
-}>
+                padding: '0.5rem 0.5rem 0.5rem 0.75rem',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '1rem',
+                fontSize: '0.9rem',
+                color: '#374151'
+            }
+            }>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     {/* User Avatars Placeholder */}
                     <div style={{ display: 'flex', marginLeft: '5px' }}>
