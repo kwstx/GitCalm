@@ -45,7 +45,7 @@ export async function generateEventSummary(title: string, body: string, type: 'p
         };
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-001" });
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     const prompt = `
     You are an expert engineering manager. Summarize this GitHub ${type} for a daily executive digest.
@@ -91,7 +91,8 @@ export async function generateDailyDigestAI(events: any[], role: string): Promis
         return null; // Fallback to local engine
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-001" });
+    // Fallback to "gemini-pro" (stable v1.0) if 1.5 is failing for this key
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     // Simplification: only send titles and categories to save tokens
     const eventsList = events.map(e => `- [${e.category}] ${e.repo}: ${e.title} (${e.impact || 'update'})`).join('\n');
