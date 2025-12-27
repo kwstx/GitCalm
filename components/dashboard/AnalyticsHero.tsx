@@ -77,20 +77,8 @@ export default function AnalyticsHero({
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                 <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#111' }}>Activity</h2>
 
-                <div style={{ display: 'flex', gap: '0.75rem' }}>
-                    <a href="/dashboard/onboarding" style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        background: '#0f172a',
-                        color: '#fff',
-                        padding: '0.5rem 1rem',
-                        borderRadius: '20px',
-                        fontSize: '0.85rem',
-                        fontWeight: 600,
-                        textDecoration: 'none',
-                        transition: 'opacity 0.2s'
-                    }}>
+                <div className="analytics-header-actions">
+                    <a href="/dashboard/onboarding" className="add-repo-btn">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         Add Repository
                     </a>
