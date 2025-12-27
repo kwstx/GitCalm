@@ -174,7 +174,6 @@ export default function DailyBriefingPage() {
                 <div style={{ padding: '6rem 0', textAlign: 'center' }}>
                     <div style={{ width: 48, height: 48, border: '4px solid #e2e8f0', borderTopColor: '#0f172a', borderRadius: '50%', margin: '0 auto 1.5rem', animation: 'spin 1s linear infinite' }} />
                     <p style={{ color: '#64748b', fontWeight: 500 }}>Connecting the dots...</p>
-                    <style jsx>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
                 </div>
             )}
 
@@ -271,6 +270,8 @@ export default function DailyBriefingPage() {
             )}
 
             <style jsx>{`
+                @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
                 .page-wrapper {
                     max-width: 1200px;
                     margin: 0 auto;
