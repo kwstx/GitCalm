@@ -79,31 +79,11 @@ export default function DemoToggle() {
                         <div style={{ padding: '1rem', textAlign: 'center', fontSize: '0.85rem', color: 'hsl(var(--primary))', cursor: 'pointer' }}>View 136 more...</div>
                     </div>
                 ) : (
-                    <div style={{
-                        width: '100%',
-                        maxWidth: '700px',
-                        textAlign: 'left',
-                        padding: '3rem',
-                        background: '#fff',
-                        borderRadius: '32px',
-                        boxShadow: '0 20px 60px -10px rgba(0,0,0,0.1)',
-                        border: '1px solid rgba(0,0,0,0.05)',
-                        position: 'relative'
-                    }}>
+                    <div className="clarity-card">
                         {/* Header */}
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3rem' }}>
-                            <h3 style={{ fontSize: '2rem', fontWeight: 700, color: '#111', margin: 0 }}>Daily Digest</h3>
-                            <div style={{
-                                padding: '0.5rem 1rem',
-                                background: '#F3F4F6',
-                                borderRadius: '12px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
-                                color: '#374151',
-                                fontWeight: 600,
-                                fontSize: '0.9rem'
-                            }}>
+                        <div className="clarity-header">
+                            <h3 className="clarity-title">Daily Digest</h3>
+                            <div className="clarity-date-badge">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                                     <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -115,119 +95,31 @@ export default function DemoToggle() {
                         </div>
 
                         {/* Main Content Grid */}
-                        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '2rem' }}>
+                        <div className="clarity-grid">
                             {/* Left: Bubble Chart */}
-                            <div style={{ position: 'relative', height: '300px' }}>
+                            <div className="bubbles-container">
                                 {/* Yellow Bubble (Completed) */}
-                                <div style={{
-                                    position: 'absolute',
-                                    top: '0',
-                                    left: '50%',
-                                    transform: 'translateX(-50%)',
-                                    width: '180px',
-                                    height: '180px',
-                                    borderRadius: '50%',
-                                    background: '#FCD34D',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    zIndex: 2,
-                                    boxShadow: '0 10px 30px rgba(252, 211, 77, 0.4)'
-                                }}>
-                                    <span style={{ fontSize: '2.5rem', fontWeight: 600, color: '#111' }}>177</span>
-                                    {/* Tag */}
-                                    <div style={{
-                                        position: 'absolute',
-                                        top: '-15px',
-                                        left: '-20px',
-                                        background: '#fff',
-                                        padding: '0.4rem 0.8rem',
-                                        borderRadius: '8px',
-                                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '6px',
-                                        fontSize: '0.8rem',
-                                        fontWeight: 600,
-                                        color: '#374151',
-                                        whiteSpace: 'nowrap'
-                                    }}>
+                                <div className="bubble bubble-yellow">
+                                    <span className="bubble-count">177</span>
+                                    <div className="bubble-tag">
                                         <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#FCD34D' }}></div>
                                         Completed
                                     </div>
                                 </div>
 
                                 {/* Red Bubble (Ongoing) */}
-                                <div style={{
-                                    position: 'absolute',
-                                    bottom: '20px',
-                                    left: '10px',
-                                    width: '130px',
-                                    height: '130px',
-                                    borderRadius: '50%',
-                                    background: '#EF4444',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    zIndex: 1,
-                                    boxShadow: '0 10px 30px rgba(239, 68, 68, 0.4)'
-                                }}>
+                                <div className="bubble bubble-red">
                                     <span style={{ fontSize: '2rem', fontWeight: 600, color: '#fff' }}>87</span>
-                                    {/* Tag */}
-                                    <div style={{
-                                        position: 'absolute',
-                                        top: '0',
-                                        left: '-30px',
-                                        background: '#fff',
-                                        padding: '0.4rem 0.8rem',
-                                        borderRadius: '8px',
-                                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '6px',
-                                        fontSize: '0.8rem',
-                                        fontWeight: 600,
-                                        color: '#374151',
-                                        whiteSpace: 'nowrap'
-                                    }}>
+                                    <div className="bubble-tag">
                                         <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#EF4444' }}></div>
                                         Ongoing
                                     </div>
                                 </div>
 
                                 {/* Purple Bubble (Awaiting) */}
-                                <div style={{
-                                    position: 'absolute',
-                                    bottom: '0',
-                                    right: '40px',
-                                    width: '90px',
-                                    height: '90px',
-                                    borderRadius: '50%',
-                                    background: '#8B5CF6',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    zIndex: 3,
-                                    boxShadow: '0 10px 30px rgba(139, 92, 246, 0.4)'
-                                }}>
+                                <div className="bubble bubble-purple">
                                     <span style={{ fontSize: '1.25rem', fontWeight: 600, color: '#fff' }}>23</span>
-                                    {/* Tag */}
-                                    <div style={{
-                                        position: 'absolute',
-                                        bottom: '-10px',
-                                        right: '-20px',
-                                        background: '#fff',
-                                        padding: '0.4rem 0.8rem',
-                                        borderRadius: '8px',
-                                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '6px',
-                                        fontSize: '0.8rem',
-                                        fontWeight: 600,
-                                        color: '#374151',
-                                        whiteSpace: 'nowrap'
-                                    }}>
+                                    <div className="bubble-tag">
                                         <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#8B5CF6' }}></div>
                                         Awaiting
                                     </div>
@@ -235,52 +127,35 @@ export default function DemoToggle() {
                             </div>
 
                             {/* Right: Stats List */}
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                                {/* Stat 1 */}
-                                <div style={{ padding: '1rem', background: '#F9FAFB', borderRadius: '16px' }}>
-                                    <div style={{ fontSize: '0.85rem', color: '#6B7280', marginBottom: '0.25rem' }}>Completed</div>
-                                    <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#111', marginBottom: '0.5rem' }}>177 (67%)</div>
-                                    <div style={{ height: '4px', width: '100%', background: '#E5E7EB', borderRadius: '2px' }}>
-                                        <div style={{ height: '100%', width: '67%', background: '#FCD34D', borderRadius: '2px' }}></div>
-                                    </div>
+                            <div className="stats-list">
+                                <div className="stat-item">
+                                    <div className="stat-label">Completed</div>
+                                    <div className="stat-value">177 (67%)</div>
+                                    <div className="stat-bar-bg"><div className="stat-bar-fill yellow-fill" style={{ width: '67%' }}></div></div>
                                 </div>
-                                {/* Stat 2 */}
-                                <div style={{ padding: '1rem', background: '#F9FAFB', borderRadius: '16px' }}>
-                                    <div style={{ fontSize: '0.85rem', color: '#6B7280', marginBottom: '0.25rem' }}>Ongoing</div>
-                                    <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#111', marginBottom: '0.5rem' }}>87 (21%)</div>
-                                    <div style={{ height: '4px', width: '100%', background: '#E5E7EB', borderRadius: '2px' }}>
-                                        <div style={{ height: '100%', width: '21%', background: '#EF4444', borderRadius: '2px' }}></div>
-                                    </div>
+                                <div className="stat-item">
+                                    <div className="stat-label">Ongoing</div>
+                                    <div className="stat-value">87 (21%)</div>
+                                    <div className="stat-bar-bg"><div className="stat-bar-fill red-fill" style={{ width: '21%' }}></div></div>
                                 </div>
-                                {/* Stat 3 */}
-                                <div style={{ padding: '1rem', background: '#F9FAFB', borderRadius: '16px' }}>
-                                    <div style={{ fontSize: '0.85rem', color: '#6B7280', marginBottom: '0.25rem' }}>Awaiting</div>
-                                    <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#111', marginBottom: '0.5rem' }}>23 (12%)</div>
-                                    <div style={{ height: '4px', width: '100%', background: '#E5E7EB', borderRadius: '2px' }}>
-                                        <div style={{ height: '100%', width: '12%', background: '#8B5CF6', borderRadius: '2px' }}></div>
-                                    </div>
+                                <div className="stat-item">
+                                    <div className="stat-label">Awaiting</div>
+                                    <div className="stat-value">23 (12%)</div>
+                                    <div className="stat-bar-bg"><div className="stat-bar-fill purple-fill" style={{ width: '12%' }}></div></div>
                                 </div>
                             </div>
                         </div>
 
                         {/* Bottom Toast */}
-                        <div style={{
-                            marginTop: '2rem',
-                            padding: '0.75rem',
-                            background: '#F9FAFB',
-                            borderRadius: '12px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '1rem'
-                        }}>
-                            <div style={{ width: 40, height: 40, borderRadius: '8px', overflow: 'hidden', background: '#ddd' }}>
-                                <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`} alt="User" style={{ width: '100%', height: '100%' }} />
+                        <div className="clarity-toast">
+                            <div className="toast-avatar">
+                                <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`} alt="User" />
                             </div>
-                            <div style={{ fontSize: '0.9rem', color: '#374151' }}>
-                                <span style={{ fontWeight: 700, fontSize: '1.1rem', marginRight: '0.5rem' }}>+14</span>
+                            <div className="toast-text">
+                                <span className="toast-highlight">+14</span>
                                 users signed in less than a minute!
                             </div>
-                            <div style={{ marginLeft: 'auto', cursor: 'pointer', color: '#9CA3AF' }}>
+                            <div className="toast-close">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <line x1="15" y1="9" x2="9" y2="15"></line>
@@ -288,6 +163,101 @@ export default function DemoToggle() {
                                 </svg>
                             </div>
                         </div>
+
+                        <style jsx>{`
+                            .clarity-card {
+                                width: 100%;
+                                max-width: 700px;
+                                text-align: left;
+                                padding: 1.5rem; /* Mobile Padding */
+                                background: #fff;
+                                border-radius: 32px;
+                                box-shadow: 0 20px 60px -10px rgba(0,0,0,0.1);
+                                border: 1px solid rgba(0,0,0,0.05);
+                                position: relative;
+                            }
+                            .clarity-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
+                            .clarity-title { font-size: 1.5rem; font-weight: 700; color: #111; margin: 0; }
+                            .clarity-date-badge {
+                                padding: 0.5rem 0.75rem; background: #F3F4F6; border-radius: 12px;
+                                display: flex; align-items: center; gap: 0.5rem; color: #374151; fontWeight: 600; fontSize: 0.8rem;
+                            }
+
+                            .clarity-grid { display: flex; flex-direction: column; gap: 2rem; }
+                            
+                            .bubbles-container { position: relative; height: 320px; width: 100%; overflow: hidden; } /* Ensure overflow hidden for mobile safety */
+                            
+                            .bubble { position: absolute; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1; }
+                            .bubble-tag {
+                                position: absolute; background: #fff; padding: 0.3rem 0.6rem; border-radius: 8px;
+                                box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 6px;
+                                fontSize: 0.8rem; fontWeight: 600; color: #374151; white-space: nowrap;
+                            }
+
+                            /* Bubble Specifics */
+                            .bubble-yellow {
+                                top: 0; left: 50%; transform: translateX(-50%);
+                                width: 160px; height: 160px; background: #FCD34D;
+                                box-shadow: 0 10px 30px rgba(252, 211, 77, 0.4); z-index: 2;
+                            }
+                            .bubble-yellow .bubble-tag { top: -10px; left: -10px; }
+                            
+                            .bubble-count { font-size: 2.5rem; fontWeight: 600; color: #111; }
+
+                            .bubble-red {
+                                bottom: 20px; left: 0;
+                                width: 110px; height: 110px; background: #EF4444;
+                                box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4); z-index: 1;
+                            }
+                            .bubble-red .bubble-tag { top: -20px; left: 0px; }
+
+                            .bubble-purple {
+                                bottom: 10px; right: 0;
+                                width: 90px; height: 90px; background: #8B5CF6;
+                                box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4); z-index: 3;
+                            }
+                            .bubble-purple .bubble-tag { bottom: -10px; right: -10px; }
+
+                            /* Stats */
+                            .stats-list { display: flex; flex-direction: column; gap: 0.75rem; }
+                            .stat-item { padding: 1rem; background: #F9FAFB; border-radius: 16px; }
+                            .stat-label { font-size: 0.85rem; color: #6B7280; margin-bottom: 0.25rem; }
+                            .stat-value { font-size: 1.1rem; fontWeight: 700; color: #111; margin-bottom: 0.5rem; }
+                            .stat-bar-bg { height: 4px; width: 100%; background: #E5E7EB; border-radius: 2px; }
+                            .stat-bar-fill { height: 100%; border-radius: 2px; }
+                            .yellow-fill { background: #FCD34D; }
+                            .red-fill { background: #EF4444; }
+                            .purple-fill { background: #8B5CF6; }
+
+                            /* Toast */
+                            .clarity-toast {
+                                margin-top: 2rem; padding: 0.75rem; background: #F9FAFB; border-radius: 12px;
+                                display: flex; align-items: center; gap: 0.75rem;
+                            }
+                            .toast-avatar { width: 36px; height: 36px; border-radius: 8px; overflow: hidden; background: #ddd; flex-shrink: 0; }
+                            .toast-avatar img { width: 100%; height: 100%; }
+                            .toast-text { font-size: 0.85rem; color: #374151; line-height: 1.3; }
+                            .toast-highlight { fontWeight: 700; font-size: 1rem; margin-right: 0.5rem; }
+                            .toast-close { margin-left: auto; cursor: pointer; color: #9CA3AF; }
+
+                            /* Desktop Styles */
+                            @media (min-width: 768px) {
+                                .clarity-card { padding: 3rem; }
+                                .clarity-title { font-size: 2rem; }
+                                .clarity-date-badge { font-size: 0.9rem; padding: 0.5rem 1rem; }
+                                .clarity-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 2rem; }
+                                .bubbles-container { height: 300px; overflow: visible; }
+                                .bubble-yellow { width: 180px; height: 180px; }
+                                .bubble-red { width: 130px; height: 130px; left: 10px; }
+                                .bubble-purple { width: 90px; height: 90px; right: 40px; bottom: 0; }
+                                .stats-list { gap: 1rem; }
+                                .stat-value { font-size: 1.25rem; }
+                                .clarity-toast { gap: 1rem; }
+                                .toast-avatar { width: 40px; height: 40px; }
+                                .toast-text { font-size: 0.9rem; }
+                                .toast-highlight { font-size: 1.1rem; }
+                            }
+                        `}</style>
                     </div>
                 )}
             </div>
