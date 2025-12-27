@@ -40,7 +40,39 @@ export async function POST(request: Request) {
             return NextResponse.json({ data: cachedDigest.digest });
         }
 
-        console.log(`[Digest API] CACHE MISS for ${userId} on ${dateKey} - Generating...`);
+        console.log(`[Digest API] CACHE MISS for ${userId} on ${dateKey} - Checking Schedule...`);
+
+        // 0.5. Check User Schedule Preference
+        // Enforce "Morning" (6am) vs "Afternoon" (2pm)
+        const userProfile = await prisma.userProfile.findUnique({ where: { userId } });
+        const schedule = userProfile?.digestSchedule || 'morning';
+
+        // Convert to user's likely timezone (Approximate via offset or just UTC/Server time for MVP)
+        // User requested "Morning/Afternoon". We'll use Server Time (UTC) shifted or just simple logic.
+        // Better: Compare Date.now() hours.
+        // NOTE: In a real app we'd store User Timezone. For now, we assume UTC or Server Time.
+        // Let's use a rough "Global Business Time" check or pass client timezone.
+        // Actually, simplest is to check strict Hours.
+        const currentHour = new Date().getHours(); // 0-23
+
+        let unlockHour = 6; // Morning default
+        if (schedule === 'afternoon') unlockHour = 14; // 2 PM
+
+        // If it's too early, block generation (User requested strictness)
+        // AND enable override if it's strictly "Today" but just early.
+        // But if they missed Yesterday's, allow it? No, Daily Digest is for THAT day.
+
+        if (currentHour < unlockHour) {
+            console.log(`[Digest API] LOCKED. Schedule: ${schedule}, Current: ${currentHour}, Unlock: ${unlockHour}`);
+            return NextResponse.json({
+                locked: true,
+                schedule,
+                unlockHour,
+                message: `Your ${schedule} briefing is preparing...`
+            });
+        }
+
+        console.log(`[Digest API] Generating... (Schedule: ${schedule} verified)`);
 
         // 1. Fetch Real Events
         const service = getGitHubService(token);
