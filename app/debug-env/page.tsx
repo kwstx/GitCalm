@@ -48,6 +48,22 @@ export default async function DebugEnvPage() {
             results.push({ model: "gemini-1.5-flash (Raw FETCH)", status: "❌ Network Error", details: e.message });
         }
 
+        // Test 4: List Models (Discovery)
+        try {
+            const listUrl = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
+            const response = await fetch(listUrl);
+            const data = await response.json();
+            if (response.ok) {
+                const modelNames = data.models?.map((m: any) => m.name) || [];
+                const display = modelNames.length > 0 ? modelNames.join('\n') : "No models found in list.";
+                results.push({ model: "ListModels API", status: "✅ Success", details: display });
+            } else {
+                results.push({ model: "ListModels API", status: "❌ Failed (" + response.status + ")", details: JSON.stringify(data, null, 2) });
+            }
+        } catch (e: any) {
+            results.push({ model: "ListModels API", status: "❌ Network Error", details: e.message });
+        }
+
     } else {
         results.push({ model: "N/A", status: "Skipped", details: "No API Key found" });
     }
