@@ -198,8 +198,7 @@ export default function AnalyticsHero({
                         ) : (
                             <div style={{ opacity: 0.7, fontSize: '0.75rem' }}>All good!</div>
                         )}
-                        <div style={{ opacity: 0.7, fontSize: '0.75rem' }}>All good!</div>
-                        )}
+
                     </div>
 
                     {/* Purple Bubble (Update) */}
