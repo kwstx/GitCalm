@@ -192,16 +192,13 @@ export default function AnalyticsHero({
                         </div>
 
                         {loading ? '...' : attention.length > 0 ? (
-                            <div style={{ width: '100%', maxHeight: '100px', overflowY: 'auto', marginTop: '1.2rem', display: 'flex', flexDirection: 'column', gap: '4px', scrollbarWidth: 'none' }}>
-                                {attention.slice(0, 3).map(e => (
-                                    <div key={e.id} style={{ fontSize: '0.7rem', lineHeight: '1.1', background: 'rgba(0,0,0,0.1)', padding: '3px 6px', borderRadius: '4px' }}>
-                                        <div style={{ fontWeight: 700 }}>{e.repo}</div>
-                                    </div>
-                                ))}
-                                {attention.length > 3 && <div style={{ fontSize: '0.65rem', opacity: 0.8 }}>+ {attention.length - 3} more</div>}
+                            <div style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+                                {attention.length}
                             </div>
                         ) : (
                             <div style={{ opacity: 0.7, fontSize: '0.75rem' }}>All good!</div>
+                        )}
+                        <div style={{ opacity: 0.7, fontSize: '0.75rem' }}>All good!</div>
                         )}
                     </div>
 
