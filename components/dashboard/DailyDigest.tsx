@@ -245,18 +245,52 @@ export default function DailyDigest({ initialProfile }: DailyDigestProps) {
     return (
         <div>
             {/* Personalized Header */}
-            <div style={{ marginBottom: '3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'end' }}>
+            <div className="dashboard-header">
                 <div>
-                    <h1 style={{ fontSize: '2.5rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>
+                    <h1 className="greeting-title">
                         Good morning, Alex.
                     </h1>
-                    <p style={{ fontSize: '1.1rem', color: '#64748b' }}>
+                    <p className="greeting-subtitle">
                         Here is your summarized activity for <strong>today</strong>.
                     </p>
                 </div>
-
-                {/* Gamification Badge Removed as per user request */}
             </div>
+
+            <style jsx>{`
+                .dashboard-header {
+                    margin-bottom: 2rem;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: end;
+                    flex-direction: column; /* Mobile first: stack */
+                    gap: 1rem;
+                }
+                .greeting-title {
+                    font-size: 2rem; /* Mobile size */
+                    font-weight: 800;
+                    color: #0f172a;
+                    margin-bottom: 0.5rem;
+                    letter-spacing: -0.02em;
+                    line-height: 1.1;
+                }
+                .greeting-subtitle {
+                    font-size: 1rem;
+                    color: #64748b;
+                }
+                
+                @media (min-width: 768px) {
+                    .dashboard-header {
+                        margin-bottom: 3rem;
+                        flex-direction: row; /* Desktop: row */
+                    }
+                    .greeting-title {
+                        font-size: 2.5rem;
+                    }
+                    .greeting-subtitle {
+                        font-size: 1.1rem;
+                    }
+                }
+            `}</style>
 
             {/* Visual Analytics Hero */}
             <AnalyticsHero
