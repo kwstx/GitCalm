@@ -797,10 +797,10 @@ h3 {
     justify-content: center;
     overflow: hidden;
   }
-}
 
-.login-right-panel {
-  width: 50%;
-  padding: 4rem;
-  min-height: auto;
+  .login-right-panel {
+    width: 50%;
+    padding: 4rem;
+    min-height: auto;
+  }
 }
