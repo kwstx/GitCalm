@@ -549,11 +549,14 @@ h3 {
 
 /* Mobile Sizes & Positions */
 .bubble-yellow {
-  width: 180px;
-  height: 180px;
-  font-size: 0.8rem;
+  width: 150px;
+  /* Shrunk from 180px */
+  height: 150px;
+  font-size: 0.75rem;
+  /* Slightly smaller text */
   position: absolute;
-  top: 0;
+  top: -10px;
+  /* Pulled up */
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
