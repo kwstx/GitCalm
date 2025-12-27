@@ -43,6 +43,7 @@ const MOCK_STORIES = [
 
 interface DailyDigestProps {
     initialProfile?: {
+        name?: string;
         selectedRepos?: string[];
         focusAreas?: string[];
     };
@@ -248,7 +249,7 @@ export default function DailyDigest({ initialProfile }: DailyDigestProps) {
             <div className="dashboard-header">
                 <div>
                     <h1 className="greeting-title">
-                        Good morning, Alex.
+                        Good morning, {initialProfile?.name?.split(' ')[0] || 'there'}.
                     </h1>
                     <p className="greeting-subtitle">
                         Here is your summarized activity for <strong>today</strong>.

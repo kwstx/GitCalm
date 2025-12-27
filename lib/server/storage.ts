@@ -44,7 +44,13 @@ export async function getUserProfile() {
     }
 
     // Transform Prisma Dates/Arrays if needed
+    // Use session name as fallback if DB name is missing, or vice versa.
+    // GitHub profile name is usually in session.user.name
+    const session = await auth();
+    const name = session?.user?.name || "User";
+
     return {
+        name,
         nickname: profile.nickname || DEFAULT_PROFILE.nickname,
         plan: profile.plan,
         role: profile.role,
