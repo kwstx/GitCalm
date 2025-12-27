@@ -10,7 +10,6 @@ export default function DailyBriefingPage() {
     const [lockedState, setLockedState] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
 
-    // Initial Load - Check Cache/Generate
     useEffect(() => {
         if (status === 'authenticated' && session) {
             fetchDigest();
@@ -51,38 +50,66 @@ export default function DailyBriefingPage() {
     };
 
     if (status === 'loading') {
-        return <div style={{ padding: '6rem', textAlign: 'center', color: '#64748b' }}>Loading daily briefing...</div>;
+        return <div className="flex-center" style={{ height: '50vh', color: '#64748b' }}>Loading daily briefing...</div>;
     }
 
     if (status === 'unauthenticated' || !session) {
-        return <div style={{ padding: '4rem', textAlign: 'center', color: '#64748b' }}>Please log in to view your briefing.</div>;
+        return <div className="flex-center" style={{ height: '50vh', color: '#64748b' }}>Please log in to view your briefing.</div>;
     }
 
-    // LOCKED STATE (Modern UI)
+    // --- LOCKED STATE (Unique "Waiting" UI) ---
     if (lockedState) {
         return (
-            <div style={{ maxWidth: '800px', margin: '4rem auto', textAlign: 'center', fontFamily: 'var(--font-geist-sans), sans-serif' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>☕</div>
-                <h2 style={{ fontSize: '1.8rem', fontWeight: 700, color: '#0f172a', marginBottom: '1rem' }}>
-                    Good {lockedState.schedule === 'morning' ? 'Morning' : 'Afternoon'}, {session.user?.name?.split(' ')[0] || 'User'}.
-                </h2>
-                <p style={{ fontSize: '1.1rem', color: '#64748b', maxWidth: '460px', margin: '0 auto 2rem', lineHeight: '1.6' }}>
-                    Your {lockedState.schedule} briefing is being prepared. It will be unlocked at <strong>{lockedState.unlockHour > 12 ? `${lockedState.unlockHour - 12} PM` : `${lockedState.unlockHour} AM`}</strong>.
-                </p>
+            <div style={{
+                minHeight: '80vh',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'relative',
+                overflow: 'hidden',
+                background: 'radial-gradient(circle at 50% 50%, #f1f5f9 0%, #fff 100%)'
+            }}>
+                {/* Ambient Blobs */}
+                <div style={{ position: 'absolute', top: '20%', left: '20%', width: '300px', height: '300px', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '50%', filter: 'blur(80px)' }} />
+                <div style={{ position: 'absolute', bottom: '20%', right: '20%', width: '300px', height: '300px', background: 'rgba(249, 115, 22, 0.1)', borderRadius: '50%', filter: 'blur(80px)' }} />
+
                 <div style={{
-                    padding: '0.75rem 1.5rem',
-                    background: '#f1f5f9',
-                    borderRadius: '99px',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    fontSize: '0.875rem',
-                    color: '#64748b',
-                    fontWeight: 500
+                    position: 'relative',
+                    zIndex: 10,
+                    textAlign: 'center',
+                    background: 'rgba(255, 255, 255, 0.8)',
+                    backdropFilter: 'blur(20px)',
+                    padding: '3rem',
+                    borderRadius: '32px',
+                    border: '1px solid rgba(255, 255, 255, 0.5)',
+                    boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.05)',
+                    maxWidth: '500px'
                 }}>
-                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#94a3b8' }}></div>
-                    Current time: {new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
+                    <div style={{ fontSize: '3.5rem', marginBottom: '1rem', animation: 'float 3s ease-in-out infinite' }}>☕</div>
+                    <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.5rem', letterSpacing: '-0.03em' }}>
+                        Good {lockedState.schedule === 'morning' ? 'Morning' : 'Afternoon'}.
+                    </h2>
+                    <p style={{ fontSize: '1.1rem', color: '#64748b', marginBottom: '2rem', lineHeight: '1.6' }}>
+                        The briefing is locked until <strong>{lockedState.unlockHour > 12 ? `${lockedState.unlockHour - 12} PM` : `${lockedState.unlockHour} AM`}</strong> to help you focus.
+                    </p>
+
+                    <div style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        padding: '0.75rem 1.25rem',
+                        background: '#f8fafc',
+                        borderRadius: '99px',
+                        border: '1px solid #e2e8f0',
+                        fontSize: '0.9rem',
+                        color: '#475569',
+                        fontWeight: 600
+                    }}>
+                        <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#94a3b8', boxShadow: '0 0 0 2px rgba(148, 163, 184, 0.2)' }}></div>
+                        {new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
+                    </div>
                 </div>
+                <style jsx>{`@keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }`}</style>
             </div>
         );
     }
@@ -91,192 +118,213 @@ export default function DailyBriefingPage() {
         <div style={{
             maxWidth: '1200px',
             margin: '0 auto',
-            padding: '2rem',
-            fontFamily: 'var(--font-geist-sans), sans-serif',
-            color: '#0f172a'
+            padding: '3rem 2rem',
+            position: 'relative'
         }}>
-            {/* Modern Header */}
-            <header style={{ marginBottom: '2.5rem' }}>
+
+            {/* Ambient Background for Page */}
+            <div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: '500px', background: 'linear-gradient(180deg, #f8fafc 0%, rgba(255,255,255,0) 100%)', zIndex: -1 }} />
+            <div style={{ position: 'fixed', top: '-10%', right: '-10%', width: '600px', height: '600px', background: 'rgba(59, 130, 246, 0.03)', borderRadius: '50%', filter: 'blur(100px)', zIndex: -1 }} />
+
+            {/* Header */}
+            <header style={{ marginBottom: '4rem', position: 'relative' }}>
                 <div style={{
+                    display: 'inline-block',
+                    padding: '0.5rem 1rem',
+                    background: 'rgba(15, 23, 42, 0.05)',
+                    color: '#0f172a',
+                    borderRadius: '99px',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
                     textTransform: 'uppercase',
                     letterSpacing: '0.05em',
-                    color: '#64748b',
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
-                    marginBottom: '0.5rem'
+                    marginBottom: '1.5rem'
                 }}>
-                    {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                    Daily Intelligence
                 </div>
                 <h1 style={{
-                    fontSize: '2rem',
-                    fontWeight: 700,
-                    letterSpacing: '-0.02em',
+                    fontSize: '3.5rem',
+                    fontWeight: 800,
+                    letterSpacing: '-0.03em',
                     color: '#0f172a',
-                    marginBottom: '0.5rem'
+                    lineHeight: '1.1',
+                    marginBottom: '1rem',
+                    background: 'linear-gradient(135deg, #0f172a 0%, #334155 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent'
                 }}>
-                    Daily Briefing
+                    Ready for your day?
                 </h1>
-                <p style={{ color: '#64748b', fontSize: '1rem' }}>
-                    Here is what you need to know for today.
+                <p style={{ fontSize: '1.25rem', color: '#64748b', maxWidth: '600px' }}>
+                    Here’s the breakdown of yesterday’s activity and what needs your attention today.
                 </p>
             </header>
 
             {/* Error State */}
             {error && (
-                <div style={{ padding: '1rem', background: '#fef2f2', border: '1px solid #fee2e2', color: '#ef4444', borderRadius: '12px', marginBottom: '2rem' }}>
-                    ⚠️ {error} <button onClick={fetchDigest} style={{ textDecoration: 'underline', marginLeft: '1rem', fontWeight: 500 }}>Retry</button>
+                <div style={{ padding: '1rem', background: '#FEF2F2', border: '1px solid #FCA5A5', color: '#B91C1C', borderRadius: '16px', marginBottom: '2rem' }}>
+                    ⚠️ {error} <button onClick={fetchDigest} style={{ textDecoration: 'underline', marginLeft: '1rem', fontWeight: 600 }}>Retry</button>
                 </div>
             )}
 
-            {/* Loading Content */}
+            {/* Loading */}
             {loading && !digest && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center', padding: '6rem 0', color: '#94a3b8' }}>
-                    <div className="spinner" style={{ width: 32, height: 32, border: '3px solid #e2e8f0', borderTopColor: '#0f172a', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-                    <p style={{ fontSize: '0.9rem', fontWeight: 500 }}>Analyzing GitHub activity...</p>
+                <div style={{ padding: '6rem 0', textAlign: 'center' }}>
+                    <div style={{ width: 48, height: 48, border: '4px solid #e2e8f0', borderTopColor: '#0f172a', borderRadius: '50%', margin: '0 auto 1.5rem', animation: 'spin 1s linear infinite' }} />
+                    <p style={{ color: '#64748b', fontWeight: 500 }}>Connecting the dots...</p>
                     <style jsx>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
                 </div>
             )}
 
-            {/* Main Content */}
+            {/* Content Grid */}
             {digest && (
-                <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
-                    <style jsx>{`@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }`}</style>
+                <div className="animate-in fade-in slide-in-from-bottom-8 duration-700">
 
-                    {/* Top Row: Summary */}
-                    <section style={{ marginBottom: '2rem' }}>
+                    {/* Main Summary Card */}
+                    <section style={{ marginBottom: '3rem' }}>
                         <div style={{
-                            background: '#fff',
-                            border: '1px solid #e2e8f0',
-                            borderRadius: '16px',
-                            padding: '2rem',
-                            boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+                            background: '#ffffff',
+                            borderRadius: '24px',
+                            padding: '3rem',
+                            boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.08)',
+                            border: '1px solid rgba(226, 232, 240, 0.8)',
+                            position: 'relative',
+                            overflow: 'hidden'
                         }}>
-                            <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem', color: '#334155' }}>Executive Summary</h3>
-                            <div style={{ fontSize: '1.1rem', lineHeight: '1.7', color: '#334155' }}>
+                            <div style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '6px',
+                                height: '100%',
+                                background: 'linear-gradient(to bottom, #3b82f6, #8b5cf6)'
+                            }} />
+
+                            <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a', marginBottom: '1.5rem' }}>Executive Summary</h3>
+                            <div style={{ fontSize: '1.25rem', lineHeight: '1.8', color: '#334155' }}>
                                 {digest.summary}
                             </div>
                         </div>
                     </section>
 
-                    {/* Three Column Grid */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
+                    {/* Masonry Grid */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '2rem' }}>
 
-                        {/* Column 1: Blockers (Red) */}
+                        {/* Fires (Red) */}
                         <div style={{
                             background: '#fff',
-                            border: '1px solid #e2e8f0',
-                            borderRadius: '16px',
-                            padding: '1.5rem',
-                            boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
-                        }}>
-                            <h3 style={{
-                                fontSize: '0.9rem',
-                                fontWeight: 700,
-                                color: '#ef4444',
-                                marginBottom: '1.25rem',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem'
-                            }}>
-                                <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#ef4444' }}></div>
-                                BLOCKERS & FIRES
-                            </h3>
+                            borderRadius: '24px',
+                            padding: '2rem',
+                            boxShadow: '0 10px 30px -5px rgba(239, 68, 68, 0.1)',
+                            border: '1px solid #FEE2E2',
+                            transition: 'transform 0.2s',
+                            cursor: 'default'
+                        }}
+                            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
+                            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                        >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+                                <div style={{
+                                    width: 48, height: 48,
+                                    borderRadius: '16px',
+                                    background: '#FEF2F2',
+                                    color: '#EF4444',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                }}>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+                                </div>
+                                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1e293b' }}>Blockers</h3>
+                            </div>
 
                             {digest.blockingIssues.length > 0 ? (
-                                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                                <ul style={{ listStyle: 'none', padding: 0 }}>
                                     {digest.blockingIssues.map((issue: any, i: number) => (
-                                        <li key={i} style={{ marginBottom: '1rem', paddingBottom: '1rem', borderBottom: i === digest.blockingIssues.length - 1 ? 'none' : '1px solid #f1f5f9' }}>
-                                            <a href="#" style={{ fontWeight: 600, color: '#1e293b', textDecoration: 'none', fontSize: '0.95rem', display: 'block', marginBottom: '0.25rem', lineHeight: '1.4' }}>{issue.title}</a>
-                                            <span style={{ fontSize: '0.8rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-                                                {issue.repo}
-                                            </span>
+                                        <li key={i} style={{ padding: '1rem', background: '#FEF2F2', borderRadius: '12px', marginBottom: '1rem', fontSize: '0.95rem', color: '#991B1B' }}>
+                                            <span style={{ fontWeight: 700, display: 'block', marginBottom: '0.25rem', fontSize: '0.85rem', color: '#EF4444', textTransform: 'uppercase' }}>{issue.repo}</span>
+                                            {issue.title}
                                         </li>
                                     ))}
                                 </ul>
                             ) : (
-                                <p style={{ color: '#94a3b8', fontSize: '0.9rem', fontStyle: 'italic' }}>No critical blockers found.</p>
+                                <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>No critical fires today.</p>
                             )}
                         </div>
 
-                        {/* Column 2: Action Plan (Blue) */}
+                        {/* Action Plan (Blue) */}
                         <div style={{
                             background: '#fff',
-                            border: '1px solid #e2e8f0',
-                            borderRadius: '16px',
-                            padding: '1.5rem',
-                            boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
-                        }}>
-                            <h3 style={{
-                                fontSize: '0.9rem',
-                                fontWeight: 700,
-                                color: '#3b82f6',
-                                marginBottom: '1.25rem',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem'
-                            }}>
-                                <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#3b82f6' }}></div>
-                                ACTION PLAN
-                            </h3>
+                            borderRadius: '24px',
+                            padding: '2rem',
+                            boxShadow: '0 10px 30px -5px rgba(59, 130, 246, 0.1)',
+                            border: '1px solid #DBEAFE',
+                            transition: 'transform 0.2s'
+                        }}
+                            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
+                            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                        >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+                                <div style={{
+                                    width: 48, height: 48,
+                                    borderRadius: '16px',
+                                    background: '#EFF6FF',
+                                    color: '#3B82F6',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                }}>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                                </div>
+                                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1e293b' }}>Priority Actions</h3>
+                            </div>
+
                             {digest.suggestedActions.length > 0 ? (
-                                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                                <ul style={{ listStyle: 'none', padding: 0 }}>
                                     {digest.suggestedActions.map((action: any, i: number) => (
-                                        <li key={i} style={{ marginBottom: '0.75rem', display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-                                            <span style={{
-                                                background: '#eff6ff',
-                                                color: '#3b82f6',
-                                                fontSize: '0.65rem',
-                                                fontWeight: 700,
-                                                padding: '2px 6px',
-                                                borderRadius: '4px',
-                                                textTransform: 'uppercase',
-                                                marginTop: '3px'
-                                            }}>
-                                                {action.type}
-                                            </span>
-                                            <span style={{ fontSize: '0.9rem', fontWeight: 500, color: '#334155', lineHeight: '1.5' }}>{action.label}</span>
+                                        <li key={i} style={{ padding: '1rem', background: '#F8FAFC', borderRadius: '12px', marginBottom: '1rem', fontSize: '0.95rem', border: '1px solid #F1F5F9', display: 'flex', alignItems: 'baseline', gap: '0.75rem' }}>
+                                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#3B82F6', flexShrink: 0 }}></div>
+                                            <span style={{ color: '#334155' }}>{action.label}</span>
                                         </li>
                                     ))}
                                 </ul>
                             ) : (
-                                <p style={{ color: '#94a3b8', fontSize: '0.9rem', fontStyle: 'italic' }}>No actions suggested.</p>
+                                <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>No specific actions suggested.</p>
                             )}
                         </div>
 
-                        {/* Column 3: Quick Wins (Green) */}
+                        {/* Wins (Green) */}
                         <div style={{
                             background: '#fff',
-                            border: '1px solid #e2e8f0',
-                            borderRadius: '16px',
-                            padding: '1.5rem',
-                            boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
-                        }}>
-                            <h3 style={{
-                                fontSize: '0.9rem',
-                                fontWeight: 700,
-                                color: '#22c55e',
-                                marginBottom: '1.25rem',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem'
-                            }}>
-                                <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e' }}></div>
-                                QUICK WINS
-                            </h3>
+                            borderRadius: '24px',
+                            padding: '2rem',
+                            boxShadow: '0 10px 30px -5px rgba(34, 197, 94, 0.1)',
+                            border: '1px solid #DCFCE7',
+                            transition: 'transform 0.2s'
+                        }}
+                            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
+                            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                        >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+                                <div style={{
+                                    width: 48, height: 48,
+                                    borderRadius: '16px',
+                                    background: '#F0FDF4',
+                                    color: '#22C55E',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                }}>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                </div>
+                                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1e293b' }}>Wins</h3>
+                            </div>
+
                             {digest.quickWins.length > 0 ? (
-                                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                                <ul style={{ listStyle: 'none', padding: 0 }}>
                                     {digest.quickWins.map((win: any, i: number) => (
-                                        <li key={i} style={{ marginBottom: '0.75rem', display: 'flex', gap: '0.6rem', alignItems: 'flex-start' }}>
-                                            <div style={{ color: '#22c55e', marginTop: '1px' }}>
-                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                            </div>
-                                            <span style={{ fontSize: '0.9rem', color: '#334155', lineHeight: '1.5' }}>{win.title}</span>
+                                        <li key={i} style={{ padding: '1rem', background: '#F0FDF4', borderRadius: '12px', marginBottom: '1rem', fontSize: '0.95rem', color: '#166534' }}>
+                                            <span style={{ fontWeight: 700, display: 'block', marginBottom: '0.25rem', fontSize: '0.85rem', color: '#22C55E' }}>{win.repo}</span>
+                                            {win.title}
                                         </li>
                                     ))}
                                 </ul>
                             ) : (
-                                <p style={{ color: '#94a3b8', fontSize: '0.9rem', fontStyle: 'italic' }}>No recent merges.</p>
+                                <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>No merges yet.</p>
                             )}
                         </div>
 
