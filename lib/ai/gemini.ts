@@ -78,3 +78,53 @@ export async function generateEventSummary(title: string, body: string, type: 'p
         };
     }
 }
+
+/**
+ * Generate a comprehensive daily digest using Gemini
+ */
+export async function generateDailyDigestAI(events: any[], role: string): Promise<any> {
+    if (!genAI || events.length === 0) return null;
+
+    if (!checkRateLimit()) {
+        console.warn("[Gemini] Internal Rate Limit Hit. Skipping AI Digest.");
+        return null; // Fallback to local engine
+    }
+
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    // Simplification: only send titles and categories to save tokens
+    const eventsList = events.map(e => `- [${e.category}] ${e.repo}: ${e.title} (${e.impact || 'update'})`).join('\n');
+
+    const prompt = `
+    You are an expert engineering manager active as a ${role}. 
+    Analyze this list of GitHub activity and generate a concise daily briefing.
+    
+    Activity Log:
+    ${eventsList}
+    
+    Requirements:
+    1. Summary: A friendly, professional paragraph (max 40 words) summarizing the day's vibe (e.g. "High velocity day with 3 key feature ships..." or "Quiet day mostly focused on maintenance...").
+    2. Blocking Issues: Identify up to 3 apparent blockers or critical failures.
+    3. Quick Wins: Identify up to 3 successes (merged PRs).
+    4. Suggested Actions: Recommend 2 specific follow-up actions (e.g. "Review PR #123", "Fix build in backend").
+    
+    Output JSON format only:
+    {
+      "summary": "...",
+      "blockingIssues": [ { "title": "...", "repo": "...", "id": "placeholder" } ],
+      "quickWins": [ { "title": "...", "repo": "...", "id": "placeholder" } ],
+      "suggestedActions": [ { "type": "review|reply|fix", "label": "...", "url": "#" } ]
+    }
+    `;
+
+    try {
+        const result = await model.generateContent(prompt);
+        const response = result.response;
+        const text = response.text().replace(/```json/g, '').replace(/```/g, '').trim();
+        return JSON.parse(text);
+    } catch (error) {
+        console.error("Gemini Digest Generation Failed:", error);
+        return null;
+    }
+}
+

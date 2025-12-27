@@ -1,6 +1,6 @@
 import { ProcessedEvent } from '../github/types';
 import { interpretEvent } from '../ai/classifier';
-import { generateEventSummary } from '../ai/gemini'; // Switch to Gemini (External API)
+// import { generateEventSummary } from '../ai/gemini'; // Replaced by Daily Digest AI
 
 /**
  * Server-side processor for GitHub data
@@ -59,12 +59,11 @@ export async function processGitHubDataServer(rawData: any[]): Promise<Processed
                     // 1. Fast Classification
                     aiResult = await interpretEvent(aiText);
 
-                    // 2. Gemini AI Summarization (External API with 10 RPM Rate Limit)
-                    // Only run for Merged PRs or if the classifier found something interesting (score > 0.8)
-                    // Checks if Key exists first
-                    if (hasGemini && (isMerged || aiResult.score > 0.8)) {
-                        summaryResult = await generateEventSummary(pr.title, pr.body, 'pr');
-                    }
+
+                    // 2. Gemini AI Summarization (REMOVED: Per-event summarization disabled to focus AI tokens on Daily Digest)
+                    // if (hasGemini && (isMerged || aiResult.score > 0.8)) {
+                    //    summaryResult = await generateEventSummary(pr.title, pr.body, 'pr');
+                    // }
 
                 } catch (e) {
                     console.error(`[Processor] AI Failed for PR ${pr.number}:`, e);
@@ -117,14 +116,14 @@ export async function processGitHubDataServer(rawData: any[]): Promise<Processed
                     title: isMerged
                         ? `PR #${pr.number} merged: ${pr.title}`
                         : `PR #${pr.number}: ${pr.title}`,
-                    // Use Gemini summary if available, otherwise heuristic fallback
-                    summary: (summaryResult && summaryResult.summary) ? summaryResult.summary : `Pull request by ${pr.user.login}. ${aiResult.reason}`,
+                    // Use heuristic fallback only
+                    summary: `Pull request by ${pr.user.login}. ${aiResult.reason}`,
                     timestamp: pr.updated_at,
                     repo: repoName,
                     url: pr.html_url,
                     priority,
-                    // Use Gemini impact if available, otherwise heuristic fallback
-                    impact: (summaryResult && summaryResult.impact) ? summaryResult.impact : impact,
+                    // Use heuristic fallback only
+                    impact: impact,
                     priorityReason: aiResult.reason,
                 });
             }

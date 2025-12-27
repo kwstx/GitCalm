@@ -120,6 +120,31 @@ export default function DailyDigest({ initialProfile }: DailyDigestProps) {
         return true;
     });
 
+
+    // AI Digest State
+    const [aiDigest, setAiDigest] = useState<any>(null);
+    const [generatingDigest, setGeneratingDigest] = useState(false);
+
+    const handleGenerateDigest = async () => {
+        setGeneratingDigest(true);
+        try {
+            const res = await fetch('/api/digest/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    date: dateRange.end.toISOString(),
+                    userContext: 'Manager' // TODO: Get from profile
+                })
+            });
+            const { data } = await res.json();
+            setAiDigest(data);
+        } catch (e) {
+            console.error('Failed to generate digest', e);
+        } finally {
+            setGeneratingDigest(false);
+        }
+    };
+
     // Filter events into categories for detailed display
     const outcomes = events.filter(e => e.category === 'success');
     const attention = events.filter(e => e.category === 'warning');
@@ -146,6 +171,7 @@ export default function DailyDigest({ initialProfile }: DailyDigestProps) {
         }
         return null;
     };
+
 
     // Filter events by selected category
     const filteredEvents = selectedCategory
@@ -244,6 +270,92 @@ export default function DailyDigest({ initialProfile }: DailyDigestProps) {
                 dateRange={dateRange}
                 onDateChange={(start, end) => setDateRange({ start, end })}
             />
+
+            {/* AI Morning Brief Card */}
+            <div style={{
+                background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+                borderRadius: '16px',
+                padding: '2rem',
+                marginBottom: '3rem',
+                color: '#fff',
+                position: 'relative',
+                overflow: 'hidden',
+                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
+            }}>
+                <div style={{ position: 'relative', zIndex: 10 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1.5rem' }}>
+                        <div>
+                            <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                <span style={{ fontSize: '1.75rem' }}>☀️</span> Daily Briefing
+                            </h2>
+                            <p style={{ color: '#94a3b8' }}>AI-powered summary of your team's pulse.</p>
+                        </div>
+                        {!aiDigest && (
+                            <button
+                                onClick={handleGenerateDigest}
+                                disabled={generatingDigest}
+                                style={{
+                                    background: '#3b82f6',
+                                    border: 'none',
+                                    padding: '0.75rem 1.5rem',
+                                    borderRadius: '8px',
+                                    color: '#fff',
+                                    fontWeight: 600,
+                                    cursor: generatingDigest ? 'not-allowed' : 'pointer',
+                                    opacity: generatingDigest ? 0.7 : 1,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem'
+                                }}
+                            >
+                                {generatingDigest ? 'Analyzing...' : 'Generate Today\'s Brief'}
+                            </button>
+                        )}
+                    </div>
+
+                    {aiDigest && (
+                        <div className="animate-fade-in">
+                            <p style={{ fontSize: '1.1rem', lineHeight: 1.6, marginBottom: '2rem', color: '#e2e8f0' }}>
+                                {aiDigest.summary}
+                            </p>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
+                                {/* Blocking Issues */}
+                                {aiDigest.blockingIssues.length > 0 && (
+                                    <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '12px', padding: '1rem' }}>
+                                        <h4 style={{ color: '#FCA5A5', fontSize: '0.9rem', fontWeight: 700, marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                            ⚠️ Attention Needed
+                                        </h4>
+                                        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                                            {aiDigest.blockingIssues.map((item: any) => (
+                                                <li key={item.id} style={{ marginBottom: '0.5rem', fontSize: '0.95rem' }}>
+                                                    <span style={{ fontWeight: 600 }}>{item.repo}</span>: {item.title}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+
+                                {/* Quick Wins */}
+                                {aiDigest.quickWins.length > 0 && (
+                                    <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '12px', padding: '1rem' }}>
+                                        <h4 style={{ color: '#6EE7B7', fontSize: '0.9rem', fontWeight: 700, marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                            ✅ Quick Wins
+                                        </h4>
+                                        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                                            {aiDigest.quickWins.map((item: any) => (
+                                                <li key={item.id} style={{ marginBottom: '0.5rem', fontSize: '0.95rem' }}>
+                                                    <span style={{ fontWeight: 600 }}>{item.repo}</span>: {item.title}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
 
             {/* Error State */}
             {error && !useDemoData && (
