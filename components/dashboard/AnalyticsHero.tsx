@@ -327,31 +327,7 @@ export default function AnalyticsHero({
                 </div>
             </div >
 
-            {/* Bottom Floating Toast */}
-            < div style={{
-                marginTop: '1.5rem',
-                background: '#F9FAFB',
-                borderRadius: '50px',
-                padding: '0.5rem 0.5rem 0.5rem 0.75rem',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '1rem',
-                fontSize: '0.9rem',
-                color: '#374151'
-            }
-            }>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    {/* User Avatars Placeholder */}
-                    <div style={{ display: 'flex', marginLeft: '5px' }}>
-                        <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#E5E7EB', border: '2px solid #fff', marginLeft: '-10px', zIndex: 1 }}></div>
-                        <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#D1D5DB', border: '2px solid #fff', marginLeft: '-10px', zIndex: 0 }}></div>
-                    </div>
-                    <strong>+14</strong> users active in the last minute!
-                </div>
-                <button style={{ width: 24, height: 24, borderRadius: '50%', background: '#000', color: '#fff', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
-            </div >
+
         </div >
     );
 }
