@@ -174,8 +174,8 @@ export default function Onboarding() {
 
                     <div className="onboarding-schedule-grid">
                         {[
-                            { value: 'morning', label: '🌞 Morning Briefing', time: '8:00 AM', desc: 'Start your day with a fresh update.' },
-                            { value: 'evening', label: '🌙 Evening Wrap-up', time: '5:00 PM', desc: 'Recap what happened before you sign off.' },
+                            { value: 'morning', label: 'Morning Briefing', time: '8:00 AM', desc: 'Start your day with a fresh update.' },
+                            { value: 'evening', label: 'Evening Wrap-up', time: '5:00 PM', desc: 'Recap what happened before you sign off.' },
                         ].map((option) => (
                             <div
                                 key={option.value}
@@ -185,15 +185,34 @@ export default function Onboarding() {
                                     borderRadius: '16px',
                                     padding: '1.5rem',
                                     cursor: 'pointer',
-                                    opacity: digestSchedule === option.value ? 1 : 0.7,
-                                    transition: 'all 0.2s'
+                                    opacity: digestSchedule === option.value ? 1 : 0.8,
+                                    background: digestSchedule === option.value ? '#F8FAFC' : '#fff',
+                                    transition: 'all 0.2s',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '0.5rem'
                                 }}
                             >
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                                    <div style={{ fontSize: '1.1rem', fontWeight: 600, color: '#0f172a' }}>{option.label}</div>
-                                    <div style={{ fontSize: '0.9rem', fontWeight: 700, background: '#f1f5f9', padding: '0.25rem 0.5rem', borderRadius: '8px' }}>{option.time}</div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                        {/* Icon */}
+                                        <div style={{
+                                            width: 36, height: 36, borderRadius: '10px',
+                                            background: option.value === 'morning' ? '#FEF3C7' : '#EDE9FE',
+                                            color: option.value === 'morning' ? '#D97706' : '#7C3AED',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                        }}>
+                                            {option.value === 'morning' ? (
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                                            ) : (
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                                            )}
+                                        </div>
+                                        <div style={{ fontSize: '1.1rem', fontWeight: 600, color: '#0f172a' }}>{option.label}</div>
+                                    </div>
+                                    <div style={{ fontSize: '0.9rem', fontWeight: 700, background: '#fff', border: '1px solid #e2e8f0', padding: '0.25rem 0.5rem', borderRadius: '8px', color: '#64748b' }}>{option.time}</div>
                                 </div>
-                                <div style={{ fontSize: '0.9rem', color: '#64748b' }}>{option.desc}</div>
+                                <div style={{ fontSize: '0.9rem', color: '#64748b', paddingLeft: 'calc(36px + 0.75rem)' }}>{option.desc}</div>
                             </div>
                         ))}
                     </div>
