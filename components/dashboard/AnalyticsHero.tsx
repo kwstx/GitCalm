@@ -74,7 +74,7 @@ export default function AnalyticsHero({
             position: 'relative'
         }}>
             {/* Header Row */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <div className="analytics-header-row">
                 <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#111' }}>Activity</h2>
 
                 <div className="analytics-header-actions">
