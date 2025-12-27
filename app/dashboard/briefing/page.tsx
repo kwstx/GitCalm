@@ -4,23 +4,23 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 
 export default function DailyBriefingPage() {
-    const sessionObj = useSession();
-    const session = sessionObj?.data;
+    const { data: session, status } = useSession();
     const [loading, setLoading] = useState(false);
     const [digest, setDigest] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
 
     // Initial Load - Check Cache/Generate
     useEffect(() => {
-        if (session) {
+        if (status === 'authenticated' && session) {
             fetchDigest();
         }
-    }, [session]);
+    }, [status, session]);
 
     const fetchDigest = async () => {
         setLoading(true);
         setError(null);
         try {
+            console.log("Fetching digest...");
             const today = new Date().toISOString().split('T')[0];
             const response = await fetch('/api/digest/generate', {
                 method: 'POST',
@@ -31,16 +31,25 @@ export default function DailyBriefingPage() {
                 })
             });
             const data = await response.json();
+            console.log("Digest data:", data);
+
             if (data.error) throw new Error(data.error);
             setDigest(data.data);
         } catch (err: any) {
+            console.error("Fetch error:", err);
             setError(err.message || "Failed to load briefing");
         } finally {
             setLoading(false);
         }
     };
 
-    if (!session) return null;
+    if (status === 'loading') {
+        return <div style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>Loading session...</div>;
+    }
+
+    if (status === 'unauthenticated' || !session) {
+        return <div style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>Please log in to view your briefing.</div>;
+    }
 
     return (
         <div style={{ padding: '2rem', maxWidth: '1000px', margin: '0 auto', fontFamily: 'var(--font-geist-sans), sans-serif' }}>
