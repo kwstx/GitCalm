@@ -52,7 +52,7 @@ export default function Login() {
                         </div>
                     </div>
                     <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem', color: '#1e293b' }}>Daily Digest</h3>
-                    <p style={{ fontSize: '0.9rem', color: '#64748b', lineHeight: 1.6 }}>Your team's velocity, blockers, and wins, summarized every morning.</p>
+                    <p style={{ fontSize: '0.9rem', color: '#64748b', lineHeight: 1.6 }}>Your team&apos;s velocity, blockers, and wins, summarized every morning.</p>
 
                     {/* Fake Stats visual */}
                     <div style={{ marginTop: '2rem', width: '100%' }}>

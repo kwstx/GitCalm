@@ -40,17 +40,17 @@ export default function PrivacyPage() {
             <section className="container" style={{ maxWidth: '680px', margin: '0 auto 8rem auto' }}>
                 <div style={{ fontSize: '1.15rem', lineHeight: 1.8, color: '#334155' }}>
                     <p style={{ marginBottom: '2rem', fontSize: '1.4rem', fontWeight: 500, color: '#0F172A' }}>
-                        GitCalm was built on a simple premise: developer tools shouldn't spy on developers.
+                        GitCalm was built on a simple premise: developer tools shouldn&apos;t spy on developers.
                     </p>
 
                     <h3 style={{ fontSize: '1.5rem', fontWeight: 700, margin: '3rem 0 1rem', color: '#0F172A' }}>Zero Analytics</h3>
                     <p style={{ marginBottom: '1.5rem' }}>
-                        We do not use Google Analytics, Mixpanel, Hotjar, or any other behavioral tracking software. We don't know who you are, what pages you visit, or how long you stay.
+                        We do not use Google Analytics, Mixpanel, Hotjar, or any other behavioral tracking software. We don&apos;t know who you are, what pages you visit, or how long you stay.
                     </p>
 
                     <h3 style={{ fontSize: '1.5rem', fontWeight: 700, margin: '3rem 0 1rem', color: '#0F172A' }}>No Tracking Cookies</h3>
                     <p style={{ marginBottom: '1.5rem' }}>
-                        We don't use third-party tracking cookies. We only use essential first-party cookies to keep you logged in and secure your session.
+                        We don&apos;t use third-party tracking cookies. We only use essential first-party cookies to keep you logged in and secure your session.
                     </p>
 
                     <h3 style={{ fontSize: '1.5rem', fontWeight: 700, margin: '3rem 0 1rem', color: '#0F172A' }}>Data Minimization</h3>

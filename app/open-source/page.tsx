@@ -67,7 +67,7 @@ export default function OpenSourcePage() {
 
                     <h3 style={{ fontSize: '1.5rem', fontWeight: 700, margin: '3rem 0 1rem', color: '#0F172A' }}>Community Driven</h3>
                     <p style={{ marginBottom: '1.5rem' }}>
-                        There is no "Enterprise/Pro" edition hidden behind a paywall. The code you see is the code we run.
+                        There is no &quot;Enterprise/Pro&quot; edition hidden behind a paywall. The code you see is the code we run.
                     </p>
 
                     <div style={{ marginTop: '3rem', textAlign: 'center' }}>

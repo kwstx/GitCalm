@@ -39,27 +39,30 @@ const MOCK_STORIES = [
         summary: 'Updated global shadow tokens. 5 components auto-updated.',
         priorityReason: 'General update'
     },
-] as any[];
+] as ProcessedEvent[];
 
-export default function DailyDigest({ initialProfile }: { initialProfile?: any }) {
+interface DailyDigestProps {
+    initialProfile?: {
+        selectedRepos?: string[];
+        focusAreas?: string[];
+    };
+}
+
+export default function DailyDigest({ initialProfile }: DailyDigestProps) {
     const [selectedCategory, setSelectedCategory] = useState<StoryType | null>(null);
     const [selectedStory, setSelectedStory] = useState<ProcessedEvent | null>(null);
-    const [repos, setRepos] = useState<string[]>([]);
-    const [reposLoading, setReposLoading] = useState(true);
+
+    // Initialize state directly from props to avoid effect cascading
+    const [repos, setRepos] = useState<string[]>(initialProfile?.selectedRepos || []);
+    const [focusAreas, setFocusAreas] = useState<string[]>(initialProfile?.focusAreas || []);
+    const [reposLoading, setReposLoading] = useState(!initialProfile);
 
     const [hideBots, setHideBots] = useState(false);
     const [simpleMode, setSimpleMode] = useState(false);
-    const [focusAreas, setFocusAreas] = useState<string[]>([]); // New: User Focus Areas
 
-    // Initialize state from server-provided profile (best performance)
+    // Only fetch client-side if no initial profile provided
     useEffect(() => {
-        if (initialProfile) {
-            console.log('[DailyDigest] Using server-provided profile:', initialProfile);
-            if (initialProfile.selectedRepos) setRepos(initialProfile.selectedRepos);
-            if (initialProfile.focusAreas) setFocusAreas(initialProfile.focusAreas);
-            setReposLoading(false);
-        } else {
-            // Fallback for standalone usage (though rare now)
+        if (!initialProfile) {
             console.log('[DailyDigest] Fetching user profile (client-side fallback)...');
             fetch('/api/user/profile')
                 .then(res => res.json())
