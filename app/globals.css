@@ -804,3 +804,23 @@ h3 {
     min-height: auto;
   }
 }
+
+/* Footer Responsiveness */
+.footer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  opacity: 0.6;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .footer-container {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0;
+    text-align: left;
+  }
+}

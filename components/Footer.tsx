@@ -9,13 +9,7 @@ export default function Footer() {
             background: 'var(--card-bg)',
             marginTop: 'auto'
         }}>
-            <div className="container" style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                opacity: 0.6,
-                fontSize: '0.9rem'
-            }}>
+            <div className="container footer-container">
                 <p>&copy; {new Date().getFullYear()} GitCalm. Built as a free project.</p>
                 <div style={{ display: 'flex', gap: '1.5rem' }}>
                     <Link href="/privacy" style={{ textDecoration: 'none', color: 'inherit' }}>No Tracking</Link>
