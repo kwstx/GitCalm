@@ -3,6 +3,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 // Initialize Gemini Client
 // We use the "gemini-1.5-flash" model as it's fast, efficient, and free-tier eligible.
 const apiKey = process.env.GEMINI_API_KEY;
+console.log(`[Gemini Init] Key present: ${!!apiKey}, Length: ${apiKey?.length || 0}`);
 const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
 // Rate Limiter: Simulates a "Token Bucket" for API calls
