@@ -111,7 +111,7 @@ export default function AnalyticsHero({
                             overflow: 'hidden',
                             padding: '1.5rem',
                             textAlign: 'center',
-                            boxShadow: selectedCategory === 'success' ? '0 10px 30px -5px rgba(251, 191, 36, 0.4)' : 'none'
+                            boxShadow: selectedCategory === 'success' ? '0 20px 40px -10px rgba(251, 191, 36, 0.6)' : '0 10px 30px -10px rgba(251, 191, 36, 0.3)'
                         }}
                     >
                         <div style={{
@@ -120,7 +120,7 @@ export default function AnalyticsHero({
                             background: '#fff',
                             padding: '0.3rem 0.6rem',
                             borderRadius: '12px',
-                            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
                             fontSize: '0.7rem',
                             fontWeight: 700,
                             display: 'flex',
@@ -169,7 +169,7 @@ export default function AnalyticsHero({
                             padding: '1rem',
                             textAlign: 'center',
                             overflow: 'hidden',
-                            boxShadow: selectedCategory === 'warning' ? '0 10px 30px -5px rgba(239, 68, 68, 0.4)' : 'none'
+                            boxShadow: selectedCategory === 'warning' ? '0 20px 40px -10px rgba(239, 68, 68, 0.6)' : '0 10px 30px -10px rgba(239, 68, 68, 0.3)'
                         }}
                     >
                         <div style={{
@@ -178,7 +178,7 @@ export default function AnalyticsHero({
                             background: '#fff',
                             padding: '0.3rem 0.6rem',
                             borderRadius: '12px',
-                            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
                             fontSize: '0.7rem',
                             fontWeight: 700,
                             color: '#111',
@@ -222,7 +222,7 @@ export default function AnalyticsHero({
                             padding: '0.8rem',
                             textAlign: 'center',
                             overflow: 'hidden',
-                            boxShadow: selectedCategory === 'info' ? '0 10px 30px -5px rgba(139, 92, 246, 0.4)' : 'none'
+                            boxShadow: selectedCategory === 'info' ? '0 20px 40px -10px rgba(139, 92, 246, 0.6)' : '0 10px 30px -10px rgba(139, 92, 246, 0.3)'
                         }}
                     >
                         <div style={{
@@ -231,7 +231,7 @@ export default function AnalyticsHero({
                             background: '#fff',
                             padding: '0.2rem 0.5rem',
                             borderRadius: '10px',
-                            boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
                             fontSize: '0.65rem',
                             fontWeight: 700,
                             color: '#111',
