@@ -24,6 +24,9 @@ model User {
 
   // Custom Relation: One-to-Many with Integrations
   integrations  Integration[]
+
+  // Custom Relation: One-to-Many with DailyDigests
+  digests       DailyDigest[]
 }
 
 model Account {
@@ -91,4 +94,18 @@ model Integration {
   updatedAt   DateTime @updatedAt
 
   @@unique([userId, providerId])
+}
+
+model DailyDigest {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  dateKey         String   // Format: "YYYY-MM-DD" (Unique per user per day)
+  digest          Json     // The full SmartDigest JSON object
+
+  createdAt       DateTime @default(now())
+
+  // Ensure only one digest per user per day
+  @@unique([userId, dateKey])
 }
