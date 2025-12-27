@@ -125,7 +125,7 @@ export async function generateDailyDigestAI(events: any[], role: string): Promis
         return JSON.parse(text);
     } catch (error) {
         console.error("Gemini Digest Generation Failed:", error);
-        return null;
+        throw error; // Throw so we can report it to the user
     }
 }
 

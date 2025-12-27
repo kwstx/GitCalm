@@ -32,18 +32,21 @@ export async function generateDigestWithAI(events: ProcessedEvent[], role: strin
             console.log("Using Cloud AI Digest");
             return cloudDigest;
         }
-    } catch (e) {
+    } catch (e: any) {
         console.error("Cloud digest failed:", e);
+        return {
+            summary: `⚠️ AI Generation Failed: ${e.message || 'Unknown error'}. (Model: gemini-1.5-flash-001)`,
+            blockingIssues: [],
+            quickWins: [],
+            suggestedActions: []
+        };
     }
 
-    // 2. Cloud Failed: Return "Service Unavailable" state (No Local Fallback)
-    console.warn("Cloud AI unavailable and local fallback is disabled.");
-
+    // 2. Fallback (Should not reach here if throw works, but just in case)
     return {
-        summary: "Unable to generate AI digest. Please ensure your GEMINI_API_KEY is configured correctly in Vercel.",
+        summary: "Unable to generate AI digest. Unknown error occurred.",
         blockingIssues: [],
         quickWins: [],
         suggestedActions: []
     };
 }
-
