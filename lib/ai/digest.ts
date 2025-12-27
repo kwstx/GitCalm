@@ -35,7 +35,7 @@ export async function generateDigestWithAI(events: ProcessedEvent[], role: strin
     } catch (e: any) {
         console.error("Cloud digest failed:", e);
         return {
-            summary: `⚠️ AI Generation Failed: ${e.message || 'Unknown error'}. (Model: gemini-1.5-flash-001)`,
+            summary: `⚠️ AI Generation Failed: ${e.message || 'Unknown error'}.`,
             blockingIssues: [],
             quickWins: [],
             suggestedActions: []
