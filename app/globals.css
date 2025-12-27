@@ -540,48 +540,52 @@ h3 {
 /* Analytics Bubbles Responsiveness */
 /* Analytics Bubbles Responsiveness */
 /* Analytics Bubbles Responsiveness */
+/* Analytics Bubbles Responsiveness */
 .bubble-container {
-  height: 420px;
-  /* Increased to 420px to fit everything comfortably */
+  height: 320px;
+  /* Restored typical desktop height */
   width: 100%;
-  min-width: 0;
+  min-width: 170px !important;
   position: relative;
   margin-bottom: 2rem;
 }
 
-/* Mobile Sizes & Positions */
+/* Mobile Sizes & Positions - Same as Desktop but slightly optimized for 320px */
 .bubble-yellow {
-  width: 155px;
-  /* Shrunk from 165px */
-  height: 155px;
-  font-size: 0.8rem;
+  width: 240px;
+  /* Restored to desktop size */
+  height: 240px;
+  font-size: 0.9rem;
   position: absolute;
-  top: 50px;
-  /* Moved lower per request */
+  top: 10px;
+  /* Desktop position */
   left: 50%;
+  /* Use exact centering since we have width */
   transform: translateX(-50%);
   z-index: 1;
 }
 
 .bubble-red {
-  width: 125px;
-  /* Shrunk from 135px */
-  height: 125px;
+  width: 180px;
+  /* Restored to desktop size */
+  height: 180px;
   position: absolute;
-  bottom: 80px;
-  /* Moved higher per user request */
-  left: -5px;
+  bottom: 10px;
+  /* Desktop position */
+  left: 0;
+  /* Flush left on mobile tight space */
   z-index: 2;
 }
 
 .bubble-purple {
-  width: 95px;
-  height: 95px;
+  width: 130px;
+  /* Restored to desktop size */
+  height: 130px;
   position: absolute;
-  bottom: 0px;
-  /* Lower than red */
-  right: 0px;
-  /* Flush right */
+  bottom: 30px;
+  /* Desktop position */
+  right: 0;
+  /* Flush right on mobile tight space */
   z-index: 3;
 }
 
