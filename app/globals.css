@@ -551,8 +551,9 @@ h3 {
 
 /* Mobile Sizes & Positions */
 .bubble-yellow {
-  width: 165px;
-  height: 165px;
+  width: 155px;
+  /* Shrunk from 165px */
+  height: 155px;
   font-size: 0.8rem;
   position: absolute;
   top: 50px;
@@ -563,8 +564,9 @@ h3 {
 }
 
 .bubble-red {
-  width: 135px;
-  height: 135px;
+  width: 125px;
+  /* Shrunk from 135px */
+  height: 125px;
   position: absolute;
   bottom: 80px;
   /* Moved higher per user request */
