@@ -135,11 +135,13 @@ export default function StoryCard({ type, title, summary, timestamp, repo, impac
                                 style={{
                                     fontSize: '0.7rem', fontWeight: 700, color: '#fff',
                                     textTransform: 'uppercase', letterSpacing: '0.05em',
-                                    background: 'linear-gradient(135deg, #4f46e5, #ec4899)', // Vivid gradient
+                                    background: '#4F46E5', // Solid Indigo
                                     padding: '4px 8px', borderRadius: '6px',
-                                    boxShadow: '0 2px 5px rgba(79, 70, 229, 0.3)'
+                                    boxShadow: '0 2px 5px rgba(79, 70, 229, 0.3)',
+                                    display: 'flex', alignItems: 'center', gap: '4px'
                                 }}>
-                                🎯 {focusArea}
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg>
+                                {focusArea}
                             </div>
                         )}
                         {impact && (
