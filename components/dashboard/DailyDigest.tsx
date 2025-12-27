@@ -261,7 +261,7 @@ export default function DailyDigest({ initialProfile }: DailyDigestProps) {
                     margin-bottom: 2rem;
                     display: flex;
                     justify-content: space-between;
-                    align-items: end;
+                    align-items: flex-start; /* Mobile: Left Align */
                     flex-direction: column; /* Mobile first: stack */
                     gap: 1rem;
                 }
