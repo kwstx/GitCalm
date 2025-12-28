@@ -91,130 +91,134 @@ export default function DailyBriefingPage() {
             <div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: '500px', background: 'linear-gradient(180deg, #f8fafc 0%, rgba(255,255,255,0) 100%)', zIndex: -1 }} />
             <div style={{ position: 'fixed', top: '-10%', right: '-10%', width: '600px', height: '600px', background: 'rgba(59, 130, 246, 0.03)', borderRadius: '50%', filter: 'blur(100px)', zIndex: -1 }} />
 
-            {/* Header */}
-            <header className="page-header">
-                <div className="badge">
-                    Daily Intelligence
-                </div>
-                <h1 className="main-title">
-                    Ready for your day?
-                </h1>
-                <p className="subtitle">
-                    Here’s the breakdown of yesterday’s activity and what needs your attention today.
-                </p>
-            </header>
+            {/* BLURRED CONTENT WRAPPER */}
+            <div className={lockedState ? 'is-blurred' : ''} style={{ transition: 'filter 0.5s ease', minHeight: '100vh' }}>
 
-            {/* Error State */}
-            {error && (
-                <div style={{ padding: '1rem', background: '#FEF2F2', border: '1px solid #FCA5A5', color: '#B91C1C', borderRadius: '16px', marginBottom: '2rem' }}>
-                    ⚠️ {error} <button onClick={fetchDigest} style={{ textDecoration: 'underline', marginLeft: '1rem', fontWeight: 600 }}>Retry</button>
-                </div>
-            )}
-
-            {/* Loading */}
-            {loading && !digest && !lockedState && (
-                <div style={{ padding: '6rem 0', textAlign: 'center' }}>
-                    <div style={{ width: 48, height: 48, border: '4px solid #e2e8f0', borderTopColor: '#0f172a', borderRadius: '50%', margin: '0 auto 1.5rem', animation: 'spin 1s linear infinite' }} />
-                    <p style={{ color: '#64748b', fontWeight: 500 }}>Connecting the dots...</p>
-                </div>
-            )}
-
-            {/* Content Grid (Real or Mock) */}
-            {displayDigest && (
-                <div className={`content-container ${lockedState ? 'is-blurred' : 'animate-in fade-in slide-in-from-bottom-8 duration-700'}`}>
-
-                    {/* Main Summary Card */}
-                    <section style={{ marginBottom: '3rem' }}>
-                        <div className="summary-card">
-                            <div className="summary-accent" />
-
-                            <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a', marginBottom: '1.5rem' }}>Executive Summary</h3>
-                            <div className="summary-text">
-                                {displayDigest.summary}
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* Masonry Grid */}
-                    <div className="masonry-grid">
-
-                        {/* Fires (Red) */}
-                        <div className="grid-card red-card">
-                            <div className="card-header">
-                                <div className="icon-box red-icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
-                                </div>
-                                <h3>Blockers</h3>
-                            </div>
-
-                            {displayDigest.blockingIssues.length > 0 ? (
-                                <ul style={{ listStyle: 'none', padding: 0 }}>
-                                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                    {displayDigest.blockingIssues.map((issue: any, i: number) => (
-                                        <li key={i} className="list-item red-list">
-                                            <span className="repo-tag red-text">{issue.repo}</span>
-                                            {issue.title}
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>No critical fires today.</p>
-                            )}
-                        </div>
-
-                        {/* Action Plan (Blue) */}
-                        <div className="grid-card blue-card">
-                            <div className="card-header">
-                                <div className="icon-box blue-icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-                                </div>
-                                <h3>Priority Actions</h3>
-                            </div>
-
-                            {displayDigest.suggestedActions.length > 0 ? (
-                                <ul style={{ listStyle: 'none', padding: 0 }}>
-                                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                    {displayDigest.suggestedActions.map((action: any, i: number) => (
-                                        <li key={i} className="list-item blue-list" style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem' }}>
-                                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#3B82F6', flexShrink: 0 }}></div>
-                                            <span>{action.label}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>No specific actions suggested.</p>
-                            )}
-                        </div>
-
-                        {/* Wins (Green) */}
-                        <div className="grid-card green-card">
-                            <div className="card-header">
-                                <div className="icon-box green-icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                </div>
-                                <h3>Wins</h3>
-                            </div>
-
-                            {displayDigest.quickWins.length > 0 ? (
-                                <ul style={{ listStyle: 'none', padding: 0 }}>
-                                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                    {displayDigest.quickWins.map((win: any, i: number) => (
-                                        <li key={i} className="list-item green-list">
-                                            <span className="repo-tag green-text">{win.repo}</span>
-                                            {win.title}
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>No merges yet.</p>
-                            )}
-                        </div>
-
+                {/* Header */}
+                <header className="page-header">
+                    <div className="badge">
+                        Daily Intelligence
                     </div>
-                </div>
-            )}
+                    <h1 className="main-title">
+                        Ready for your day?
+                    </h1>
+                    <p className="subtitle">
+                        Here’s the breakdown of yesterday’s activity and what needs your attention today.
+                    </p>
+                </header>
 
-            {/* LOCKED OVERLAY */}
+                {/* Error State */}
+                {error && (
+                    <div style={{ padding: '1rem', background: '#FEF2F2', border: '1px solid #FCA5A5', color: '#B91C1C', borderRadius: '16px', marginBottom: '2rem' }}>
+                        ⚠️ {error} <button onClick={fetchDigest} style={{ textDecoration: 'underline', marginLeft: '1rem', fontWeight: 600 }}>Retry</button>
+                    </div>
+                )}
+
+                {/* Loading */}
+                {loading && !digest && !lockedState && (
+                    <div style={{ padding: '6rem 0', textAlign: 'center' }}>
+                        <div style={{ width: 48, height: 48, border: '4px solid #e2e8f0', borderTopColor: '#0f172a', borderRadius: '50%', margin: '0 auto 1.5rem', animation: 'spin 1s linear infinite' }} />
+                        <p style={{ color: '#64748b', fontWeight: 500 }}>Connecting the dots...</p>
+                    </div>
+                )}
+
+                {/* Content Grid (Real or Mock) */}
+                {displayDigest && (
+                    <div className={lockedState ? '' : 'animate-in fade-in slide-in-from-bottom-8 duration-700'}>
+
+                        {/* Main Summary Card */}
+                        <section style={{ marginBottom: '3rem' }}>
+                            <div className="summary-card">
+                                <div className="summary-accent" />
+
+                                <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a', marginBottom: '1.5rem' }}>Executive Summary</h3>
+                                <div className="summary-text">
+                                    {displayDigest.summary}
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Masonry Grid */}
+                        <div className="masonry-grid">
+
+                            {/* Fires (Red) */}
+                            <div className="grid-card red-card">
+                                <div className="card-header">
+                                    <div className="icon-box red-icon">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+                                    </div>
+                                    <h3>Blockers</h3>
+                                </div>
+
+                                {displayDigest.blockingIssues.length > 0 ? (
+                                    <ul style={{ listStyle: 'none', padding: 0 }}>
+                                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                        {displayDigest.blockingIssues.map((issue: any, i: number) => (
+                                            <li key={i} className="list-item red-list">
+                                                <span className="repo-tag red-text">{issue.repo}</span>
+                                                {issue.title}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>No critical fires today.</p>
+                                )}
+                            </div>
+
+                            {/* Action Plan (Blue) */}
+                            <div className="grid-card blue-card">
+                                <div className="card-header">
+                                    <div className="icon-box blue-icon">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                                    </div>
+                                    <h3>Priority Actions</h3>
+                                </div>
+
+                                {displayDigest.suggestedActions.length > 0 ? (
+                                    <ul style={{ listStyle: 'none', padding: 0 }}>
+                                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                        {displayDigest.suggestedActions.map((action: any, i: number) => (
+                                            <li key={i} className="list-item blue-list" style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem' }}>
+                                                <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#3B82F6', flexShrink: 0 }}></div>
+                                                <span>{action.label}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>No specific actions suggested.</p>
+                                )}
+                            </div>
+
+                            {/* Wins (Green) */}
+                            <div className="grid-card green-card">
+                                <div className="card-header">
+                                    <div className="icon-box green-icon">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </div>
+                                    <h3>Wins</h3>
+                                </div>
+
+                                {displayDigest.quickWins.length > 0 ? (
+                                    <ul style={{ listStyle: 'none', padding: 0 }}>
+                                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                        {displayDigest.quickWins.map((win: any, i: number) => (
+                                            <li key={i} className="list-item green-list">
+                                                <span className="repo-tag green-text">{win.repo}</span>
+                                                {win.title}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>No merges yet.</p>
+                                )}
+                            </div>
+
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {/* LOCKED OVERLAY (Fixed & Centered) */}
             {lockedState && (
                 <div className="locked-overlay">
                     <div className="locked-card fade-in-up">
@@ -251,7 +255,6 @@ export default function DailyBriefingPage() {
                     margin: 0 auto;
                     padding: 3rem 1.5rem; /* Reduced horizontal padding for mobile */
                     position: relative;
-                    min-height: 100vh; /* Ensure full height */
                 }
                 @media (min-width: 768px) {
                     .page-wrapper { padding: 3rem 2rem; }
@@ -259,23 +262,25 @@ export default function DailyBriefingPage() {
 
                 /* BLURRED MOCK CONTENT */
                 .is-blurred {
-                    filter: blur(8px);
-                    opacity: 0.5;
+                    filter: blur(12px); /* Increased blur */
+                    opacity: 0.4;
                     pointer-events: none;
                     user-select: none;
+                    /* Prevent scrolling on blurred content if overlay is fixed */
+                    overflow: hidden; 
+                    height: 100vh;
                 }
 
                 /* LOCKED OVERLAY */
                 .locked-overlay {
-                    position: absolute;
+                    position: fixed; /* CENTERED ON SCREEN */
                     top: 0; left: 0; right: 0; bottom: 0;
-                    z-index: 50;
+                    z-index: 999;
                     display: flex;
-                    align-items: center; /* Center vertically in page-wrapper */
-                    justify-content: center;
-                    /* Optional: extra gradient overlay */
-                    background: linear-gradient(to bottom, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.8) 100%);
-                    min-height: 80vh; 
+                    align-items: center; /* Center vertically */
+                    justify-content: center; /* Center horizontally */
+                    background: rgba(255,255,255,0.2); /* Slight tint */
+                    backdrop-filter: blur(2px); /* Extra smooth */
                 }
 
                 .locked-card {
