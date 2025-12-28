@@ -4,6 +4,7 @@ import { generateDigestWithAI } from '@/lib/ai/digest';
 import { getGitHubService } from '@/lib/github/service';
 import { processGitHubDataServer } from '@/lib/server/processor';
 import { prisma } from '@/lib/prisma';
+import { getUserProfile } from '@/lib/server/storage';
 
 export async function POST(request: Request) {
     try {
@@ -26,8 +27,6 @@ export async function POST(request: Request) {
         // We use the client's requested date or Today (UTC)
         const targetDate = date ? new Date(date) : new Date();
         const dateKey = targetDate.toISOString().split('T')[0]; // "YYYY-MM-DD"
-
-        import { getUserProfile } from '@/lib/server/storage';
 
         // ...
 
