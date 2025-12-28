@@ -47,7 +47,8 @@ export async function POST(request: Request) {
 
         let unlockHour = 6; // Morning default
         if (schedule !== 'evening') unlockHour = 8;
-        if (schedule === 'evening') unlockHour = 17; // 5 PM
+        // TEMPORARY DEBUG: Set to 21 (9 PM) to force lock screen since it's already 5 PM
+        if (schedule === 'evening') unlockHour = 21; // Was 17
 
         console.log(`[Digest Debug] UnlockCheck: ${serverHour} < ${unlockHour} ?`);
 
