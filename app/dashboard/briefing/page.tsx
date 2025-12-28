@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { Hourglass, Sun, Moon } from 'lucide-react'; // Ensure lucide-react is installed
 
 export default function DailyBriefingPage() {
     const { data: session, status } = useSession();
@@ -62,86 +63,132 @@ export default function DailyBriefingPage() {
         return <div className="flex-center" style={{ height: '50vh', color: '#64748b' }}>Please log in to view your briefing.</div>;
     }
 
-    // --- LOCKED STATE (Unique "Waiting" UI) ---
+    // --- LOCKED STATE (Premium UI) ---
     if (lockedState) {
+        // Dynamic Icon based on schedule
+        const Icon = lockedState.schedule === 'morning' ? Sun : Moon;
+
         return (
             <div className="locked-container">
-                {/* Ambient Blobs */}
-                <div className="blob blob-blue" />
-                <div className="blob blob-orange" />
+                <div className="locked-card fade-in-up">
+                    <div className="icon-wrapper">
+                        <div className="icon-ring"></div>
+                        <Hourglass size={48} className="main-icon" strokeWidth={1.5} />
+                    </div>
 
-                <div className="locked-card">
-                    <div style={{ fontSize: '3.5rem', marginBottom: '1rem', animation: 'float 3s ease-in-out infinite' }}>☕</div>
-                    <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.5rem', letterSpacing: '-0.03em' }}>
-                        Good {lockedState.schedule === 'morning' ? 'Morning' : 'Afternoon'}.
+                    <h2 className="locked-title">
+                        {lockedState.schedule === 'morning' ? 'Reviewing Morning Intel' : 'Compiling Evening Wrap-up'}
                     </h2>
-                    <p style={{ fontSize: '1.1rem', color: '#64748b', marginBottom: '2rem', lineHeight: '1.6' }}>
-                        Your briefing is loading. Please come back later at <strong>{lockedState.unlockHour > 12 ? `${lockedState.unlockHour - 12} PM` : `${lockedState.unlockHour} AM`}</strong>.
+
+                    <p className="locked-subtitle">
+                        Your briefing is locked until <strong>{lockedState.unlockHour > 12 ? `${lockedState.unlockHour - 12}:00 PM` : `${lockedState.unlockHour}:00 AM`}</strong> to help you stay focused.
                     </p>
 
-                    <div className="time-pill">
-                        <div className="status-dot"></div>
-                        {new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
+                    <div className="status-badge">
+                        <span className="pulsing-dot"></span>
+                        Status: <span style={{ fontWeight: 600, marginLeft: '4px' }}>Focus Mode</span>
                     </div>
                 </div>
 
                 <style jsx>{`
                     .locked-container {
-                        min-height: 80vh;
+                        min-height: 70vh;
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        position: relative;
-                        overflow: hidden;
-                        background: radial-gradient(circle at 50% 50%, #f1f5f9 0%, #fff 100%);
+                        background: transparent;
                         padding: 1rem;
                     }
                     .locked-card {
-                        position: relative;
-                        z-index: 10;
                         text-align: center;
-                        background: rgba(255, 255, 255, 0.8);
-                        backdrop-filter: blur(20px);
-                        padding: 2rem;
-                        border-radius: 32px;
-                        border: 1px solid rgba(255, 255, 255, 0.5);
-                        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
-                        max-width: 500px;
+                        background: #ffffff;
+                        padding: 3rem 2rem;
+                        border-radius: 24px;
+                        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+                        border: 1px solid #f1f5f9;
+                        max-width: 480px;
                         width: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
                     }
-                    @media (min-width: 768px) {
-                        .locked-card { padding: 3rem; }
-                    }
-                    .blob {
-                        position: absolute;
-                        width: 300px;
-                        height: 300px;
-                        border-radius: 50%;
-                        filter: blur(80px);
-                    }
-                    .blob-blue { top: 20%; left: 20%; background: rgba(59, 130, 246, 0.1); }
-                    .blob-orange { bottom: 20%; right: 20%; background: rgba(249, 115, 22, 0.1); }
                     
-                    .time-pill {
+                    .icon-wrapper {
+                        position: relative;
+                        margin-bottom: 2rem;
+                        width: 80px;
+                        height: 80px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                    
+                    .icon-ring {
+                        position: absolute;
+                        top: 0; left: 0;
+                        width: 100%; height: 100%;
+                        border-radius: 50%;
+                        border: 2px solid #e2e8f0;
+                        opacity: 0.5;
+                    }
+
+                    .main-icon {
+                        color: #64748b;
+                        z-index: 2;
+                    }
+
+                    .locked-title {
+                        font-size: 1.5rem;
+                        font-weight: 700;
+                        color: #0f172a;
+                        margin-bottom: 0.75rem;
+                        letter-spacing: -0.02em;
+                    }
+
+                    .locked-subtitle {
+                        font-size: 1rem;
+                        color: #64748b;
+                        line-height: 1.6;
+                        margin-bottom: 2rem;
+                        max-width: 90%;
+                    }
+
+                    .status-badge {
                         display: inline-flex;
                         align-items: center;
-                        gap: 0.75rem;
-                        padding: 0.75rem 1.25rem;
+                        padding: 0.5rem 1rem;
                         background: #f8fafc;
-                        border-radius: 99px;
                         border: 1px solid #e2e8f0;
-                        font-size: 0.9rem;
+                        border-radius: 99px;
+                        font-size: 0.85rem;
                         color: #475569;
-                        font-weight: 600;
                     }
-                    .status-dot {
+
+                    .pulsing-dot {
                         width: 8px;
                         height: 8px;
+                        background-color: #f59e0b; /* Amber for 'Focus/Wait' */
                         border-radius: 50%;
-                        background: #94a3b8;
-                        box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.2);
+                        margin-right: 8px;
+                        box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+                        animation: pulse 2s infinite;
                     }
-                     @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+
+                    @keyframes pulse {
+                        0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+                        70% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
+                        100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+                    }
+
+                    .fade-in-up {
+                        animation: fadeInUp 0.6s ease-out forwards;
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+
+                    @keyframes fadeInUp {
+                        to { opacity: 1; transform: translateY(0); }
+                    }
                 `}</style>
             </div>
         );
