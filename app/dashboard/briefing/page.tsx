@@ -91,6 +91,35 @@ export default function DailyBriefingPage() {
             <div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: '500px', background: 'linear-gradient(180deg, #f8fafc 0%, rgba(255,255,255,0) 100%)', zIndex: -1 }} />
             <div style={{ position: 'fixed', top: '-10%', right: '-10%', width: '600px', height: '600px', background: 'rgba(59, 130, 246, 0.03)', borderRadius: '50%', filter: 'blur(100px)', zIndex: -1 }} />
 
+            {/* LOCKED OVERLAY - Sticky to ensure viewport centering even if fixed is trapped */}
+            {lockedState && (
+                <div className="locked-overlay">
+                    <div className="locked-card fade-in-up">
+                        <div className="icon-wrapper">
+                            <div className="icon-ring"></div>
+                            {/* Determine Icon: Sun for morning, Moon for evening */}
+                            {lockedState.schedule === 'morning'
+                                ? <Sun size={48} className="main-icon" strokeWidth={1.5} />
+                                : <Moon size={48} className="main-icon" strokeWidth={1.5} />
+                            }
+                        </div>
+
+                        <h2 className="locked-title">
+                            {lockedState.schedule === 'morning' ? 'Reviewing Morning Intel' : 'Compiling Evening Wrap-up'}
+                        </h2>
+
+                        <p className="locked-subtitle">
+                            Your briefing is locked until <strong>{lockedState.unlockHour > 12 ? `${lockedState.unlockHour - 12}:00 PM` : `${lockedState.unlockHour}:00 AM`}</strong> to help you stay focused.
+                        </p>
+
+                        <div className="status-badge">
+                            <span className="pulsing-dot"></span>
+                            Status: <span style={{ fontWeight: 600, marginLeft: '4px' }}>Focus Mode</span>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* BLURRED CONTENT WRAPPER */}
             <div className={lockedState ? 'is-blurred' : ''} style={{ transition: 'filter 0.5s ease', minHeight: '100vh' }}>
 
@@ -218,35 +247,6 @@ export default function DailyBriefingPage() {
                 )}
             </div>
 
-            {/* LOCKED OVERLAY (Fixed & Centered) */}
-            {lockedState && (
-                <div className="locked-overlay">
-                    <div className="locked-card fade-in-up">
-                        <div className="icon-wrapper">
-                            <div className="icon-ring"></div>
-                            {/* Determine Icon: Sun for morning, Moon for evening */}
-                            {lockedState.schedule === 'morning'
-                                ? <Sun size={48} className="main-icon" strokeWidth={1.5} />
-                                : <Moon size={48} className="main-icon" strokeWidth={1.5} />
-                            }
-                        </div>
-
-                        <h2 className="locked-title">
-                            {lockedState.schedule === 'morning' ? 'Reviewing Morning Intel' : 'Compiling Evening Wrap-up'}
-                        </h2>
-
-                        <p className="locked-subtitle">
-                            Your briefing is locked until <strong>{lockedState.unlockHour > 12 ? `${lockedState.unlockHour - 12}:00 PM` : `${lockedState.unlockHour}:00 AM`}</strong> to help you stay focused.
-                        </p>
-
-                        <div className="status-badge">
-                            <span className="pulsing-dot"></span>
-                            Status: <span style={{ fontWeight: 600, marginLeft: '4px' }}>Focus Mode</span>
-                        </div>
-                    </div>
-                </div>
-            )}
-
             <style jsx>{`
                 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
@@ -262,25 +262,25 @@ export default function DailyBriefingPage() {
 
                 /* BLURRED MOCK CONTENT */
                 .is-blurred {
-                    filter: blur(12px); /* Increased blur */
-                    opacity: 0.4;
+                    filter: blur(16px); /* Stronger blur */
+                    opacity: 0.6; /* Slightly more visible so headers form shapes */
                     pointer-events: none;
                     user-select: none;
-                    /* Prevent scrolling on blurred content if overlay is fixed */
-                    overflow: hidden; 
-                    height: 100vh;
                 }
 
                 /* LOCKED OVERLAY */
                 .locked-overlay {
-                    position: fixed; /* CENTERED ON SCREEN */
-                    top: 0; left: 0; right: 0; bottom: 0;
+                    position: sticky;
+                    top: 0;
+                    margin-bottom: -100vh; /* Pull content up */
+                    height: 100vh;
                     z-index: 999;
                     display: flex;
-                    align-items: center; /* Center vertically */
-                    justify-content: center; /* Center horizontally */
-                    background: rgba(255,255,255,0.2); /* Slight tint */
-                    backdrop-filter: blur(2px); /* Extra smooth */
+                    align-items: center; 
+                    justify-content: center;
+                    /* Minimal tint, mostly rely on blur below */
+                    background: rgba(255,255,255,0.15); 
+                    /* No backdrop-filter on overlay to avoid double blur issues if overlay wraps content */
                 }
 
                 .locked-card {
