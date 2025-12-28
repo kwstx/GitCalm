@@ -527,13 +527,9 @@ h3 {
 }
 
 /* Decorative Elements Visibility */
-.decorative-floating {
-  display: none !important;
-}
-
-@media (min-width: 1024px) {
+@media (max-width: 1023px) {
   .decorative-floating {
-    display: block !important;
+    display: none !important;
   }
 }
 
