@@ -85,13 +85,13 @@ export default function DailyBriefingPage() {
     const displayDigest = digest || (lockedState ? MOCK_DIGEST : null);
 
     return (
-        <div className="page-wrapper">
+        <div className={`page-wrapper ${lockedState ? 'locked-view' : ''}`}>
 
             {/* Ambient Background for Page */}
             <div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: '500px', background: 'linear-gradient(180deg, #f8fafc 0%, rgba(255,255,255,0) 100%)', zIndex: -1 }} />
             <div style={{ position: 'fixed', top: '-10%', right: '-10%', width: '600px', height: '600px', background: 'rgba(59, 130, 246, 0.03)', borderRadius: '50%', filter: 'blur(100px)', zIndex: -1 }} />
 
-            {/* LOCKED OVERLAY - Sticky to ensure viewport centering even if fixed is trapped */}
+            {/* LOCKED OVERLAY (Absolute + Centered in constrained wrapper) */}
             {lockedState && (
                 <div className="locked-overlay">
                     <div className="locked-card fade-in-up">
@@ -121,7 +121,7 @@ export default function DailyBriefingPage() {
             )}
 
             {/* BLURRED CONTENT WRAPPER */}
-            <div className={lockedState ? 'is-blurred' : ''} style={{ transition: 'filter 0.5s ease', minHeight: '100vh' }}>
+            <div className={`content-layer ${lockedState ? 'is-blurred' : ''}`}>
 
                 {/* Header */}
                 <header className="page-header">
@@ -260,27 +260,38 @@ export default function DailyBriefingPage() {
                     .page-wrapper { padding: 3rem 2rem; }
                 }
 
+                /* LOCKED STATE: NO SCROLL */
+                .page-wrapper.locked-view {
+                    height: calc(100vh - 8rem); /* Approximate height to fit in dashboard without scroll */
+                    overflow: hidden;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .content-layer {
+                    width: 100%;
+                }
+
                 /* BLURRED MOCK CONTENT */
                 .is-blurred {
-                    filter: blur(16px); /* Stronger blur */
-                    opacity: 0.6; /* Slightly more visible so headers form shapes */
+                    filter: blur(16px);
+                    opacity: 0.6;
                     pointer-events: none;
                     user-select: none;
+                    /* In locked mode, we might scale it down slightly to look nicer */
+                    transform: scale(0.98);
                 }
 
                 /* LOCKED OVERLAY */
                 .locked-overlay {
-                    position: sticky;
-                    top: 0;
-                    margin-bottom: -100vh; /* Pull content up */
-                    height: 100vh;
+                    position: absolute; /* Absolute within the constrained page-wrapper */
+                    top: 0; left: 0; right: 0; bottom: 0;
                     z-index: 999;
                     display: flex;
                     align-items: center; 
                     justify-content: center;
-                    /* Minimal tint, mostly rely on blur below */
-                    background: rgba(255,255,255,0.15); 
-                    /* No backdrop-filter on overlay to avoid double blur issues if overlay wraps content */
+                    background: rgba(255,255,255,0.1); 
                 }
 
                 .locked-card {
