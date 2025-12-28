@@ -43,7 +43,8 @@ export default function DailyBriefingPage() {
             }
 
             if (data.error) throw new Error(data.error);
-            setDigest(data.data);
+            // Merge debug info from API response into digest state
+            setDigest({ ...data.data, debug: data.debug });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             console.error("Fetch error:", err);
