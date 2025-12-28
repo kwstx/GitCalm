@@ -69,7 +69,7 @@ export default function SettingsPage() {
     };
 
     const toggleSchedule = async () => {
-        const newSchedule = user.digestSchedule === 'morning' ? 'afternoon' : 'morning';
+        const newSchedule = user.digestSchedule === 'morning' ? 'evening' : 'morning';
 
         // Optimistic UI Update
         setUser(prev => ({ ...prev, digestSchedule: newSchedule }));

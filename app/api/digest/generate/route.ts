@@ -56,8 +56,10 @@ export async function POST(request: Request) {
         // Actually, simplest is to check strict Hours.
         const currentHour = new Date().getHours(); // 0-23
 
-        let unlockHour = 6; // Morning default
-        if (schedule === 'afternoon') unlockHour = 14; // 2 PM
+        let unlockHour = 6; // Morning default (6 AM to be safe for 8 AM users, or strictly 8?)
+        // User asked for "8:00 AM" or "5:00 PM". Let's set unlock to 8 and 17.
+        if (schedule !== 'evening') unlockHour = 8;
+        if (schedule === 'evening') unlockHour = 17; // 5 PM
 
         // If it's too early, block generation (User requested strictness)
         // AND enable override if it's strictly "Today" but just early.
