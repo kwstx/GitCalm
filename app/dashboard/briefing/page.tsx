@@ -4,6 +4,24 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { Hourglass, Sun, Moon } from 'lucide-react'; // Ensure lucide-react is installed
 
+const MOCK_DIGEST = {
+    summary: "Your daily briefing is being compiled. We are analyzing the latest pull requests, identifying potential blockers, and outlining your key wins for the day. Check back at the scheduled time for the full report.",
+    blockingIssues: [
+        { repo: 'frontend-core', title: 'Dependency conflict in auth-provider' },
+        { repo: 'backend-api', title: 'Rate limiting middleware causing timeouts' },
+        { repo: 'mobile-app', title: 'Crash on launch in iOS 17 beta' }
+    ],
+    suggestedActions: [
+        { label: 'Review PR #124 for breaking changes' },
+        { label: 'Merge stabilization fix for v2.4 release' },
+        { label: 'Update documentation for new key rotation policy' }
+    ],
+    quickWins: [
+        { repo: 'frontend-uikit', title: 'Button component accessibility fix' },
+        { repo: 'docs', title: 'Updated API reference for Q3' }
+    ]
+};
+
 export default function DailyBriefingPage() {
     const { data: session, status } = useSession();
     const [loading, setLoading] = useState(false);
@@ -63,136 +81,8 @@ export default function DailyBriefingPage() {
         return <div className="flex-center" style={{ height: '50vh', color: '#64748b' }}>Please log in to view your briefing.</div>;
     }
 
-    // --- LOCKED STATE (Premium UI) ---
-    if (lockedState) {
-        // Dynamic Icon based on schedule
-        const Icon = lockedState.schedule === 'morning' ? Sun : Moon;
-
-        return (
-            <div className="locked-container">
-                <div className="locked-card fade-in-up">
-                    <div className="icon-wrapper">
-                        <div className="icon-ring"></div>
-                        <Hourglass size={48} className="main-icon" strokeWidth={1.5} />
-                    </div>
-
-                    <h2 className="locked-title">
-                        {lockedState.schedule === 'morning' ? 'Reviewing Morning Intel' : 'Compiling Evening Wrap-up'}
-                    </h2>
-
-                    <p className="locked-subtitle">
-                        Your briefing is locked until <strong>{lockedState.unlockHour > 12 ? `${lockedState.unlockHour - 12}:00 PM` : `${lockedState.unlockHour}:00 AM`}</strong> to help you stay focused.
-                    </p>
-
-                    <div className="status-badge">
-                        <span className="pulsing-dot"></span>
-                        Status: <span style={{ fontWeight: 600, marginLeft: '4px' }}>Focus Mode</span>
-                    </div>
-                </div>
-
-                <style jsx>{`
-                    .locked-container {
-                        min-height: 70vh;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: transparent;
-                        padding: 1rem;
-                    }
-                    .locked-card {
-                        text-align: center;
-                        background: #ffffff;
-                        padding: 3rem 2rem;
-                        border-radius: 24px;
-                        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-                        border: 1px solid #f1f5f9;
-                        max-width: 480px;
-                        width: 100%;
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                    }
-                    
-                    .icon-wrapper {
-                        position: relative;
-                        margin-bottom: 2rem;
-                        width: 80px;
-                        height: 80px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                    }
-                    
-                    .icon-ring {
-                        position: absolute;
-                        top: 0; left: 0;
-                        width: 100%; height: 100%;
-                        border-radius: 50%;
-                        border: 2px solid #e2e8f0;
-                        opacity: 0.5;
-                    }
-
-                    .main-icon {
-                        color: #64748b;
-                        z-index: 2;
-                    }
-
-                    .locked-title {
-                        font-size: 1.5rem;
-                        font-weight: 700;
-                        color: #0f172a;
-                        margin-bottom: 0.75rem;
-                        letter-spacing: -0.02em;
-                    }
-
-                    .locked-subtitle {
-                        font-size: 1rem;
-                        color: #64748b;
-                        line-height: 1.6;
-                        margin-bottom: 2rem;
-                        max-width: 90%;
-                    }
-
-                    .status-badge {
-                        display: inline-flex;
-                        align-items: center;
-                        padding: 0.5rem 1rem;
-                        background: #f8fafc;
-                        border: 1px solid #e2e8f0;
-                        border-radius: 99px;
-                        font-size: 0.85rem;
-                        color: #475569;
-                    }
-
-                    .pulsing-dot {
-                        width: 8px;
-                        height: 8px;
-                        background-color: #f59e0b; /* Amber for 'Focus/Wait' */
-                        border-radius: 50%;
-                        margin-right: 8px;
-                        box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
-                        animation: pulse 2s infinite;
-                    }
-
-                    @keyframes pulse {
-                        0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
-                        70% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
-                        100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
-                    }
-
-                    .fade-in-up {
-                        animation: fadeInUp 0.6s ease-out forwards;
-                        opacity: 0;
-                        transform: translateY(20px);
-                    }
-
-                    @keyframes fadeInUp {
-                        to { opacity: 1; transform: translateY(0); }
-                    }
-                `}</style>
-            </div>
-        );
-    }
+    // Determine what to show: Real Digest OR Mock Digest (if locked)
+    const displayDigest = digest || (lockedState ? MOCK_DIGEST : null);
 
     return (
         <div className="page-wrapper">
@@ -222,16 +112,16 @@ export default function DailyBriefingPage() {
             )}
 
             {/* Loading */}
-            {loading && !digest && (
+            {loading && !digest && !lockedState && (
                 <div style={{ padding: '6rem 0', textAlign: 'center' }}>
                     <div style={{ width: 48, height: 48, border: '4px solid #e2e8f0', borderTopColor: '#0f172a', borderRadius: '50%', margin: '0 auto 1.5rem', animation: 'spin 1s linear infinite' }} />
                     <p style={{ color: '#64748b', fontWeight: 500 }}>Connecting the dots...</p>
                 </div>
             )}
 
-            {/* Content Grid */}
-            {digest && (
-                <div className="animate-in fade-in slide-in-from-bottom-8 duration-700">
+            {/* Content Grid (Real or Mock) */}
+            {displayDigest && (
+                <div className={`content-container ${lockedState ? 'is-blurred' : 'animate-in fade-in slide-in-from-bottom-8 duration-700'}`}>
 
                     {/* Main Summary Card */}
                     <section style={{ marginBottom: '3rem' }}>
@@ -240,7 +130,7 @@ export default function DailyBriefingPage() {
 
                             <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a', marginBottom: '1.5rem' }}>Executive Summary</h3>
                             <div className="summary-text">
-                                {digest.summary}
+                                {displayDigest.summary}
                             </div>
                         </div>
                     </section>
@@ -257,10 +147,10 @@ export default function DailyBriefingPage() {
                                 <h3>Blockers</h3>
                             </div>
 
-                            {digest.blockingIssues.length > 0 ? (
+                            {displayDigest.blockingIssues.length > 0 ? (
                                 <ul style={{ listStyle: 'none', padding: 0 }}>
                                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                    {digest.blockingIssues.map((issue: any, i: number) => (
+                                    {displayDigest.blockingIssues.map((issue: any, i: number) => (
                                         <li key={i} className="list-item red-list">
                                             <span className="repo-tag red-text">{issue.repo}</span>
                                             {issue.title}
@@ -281,10 +171,10 @@ export default function DailyBriefingPage() {
                                 <h3>Priority Actions</h3>
                             </div>
 
-                            {digest.suggestedActions.length > 0 ? (
+                            {displayDigest.suggestedActions.length > 0 ? (
                                 <ul style={{ listStyle: 'none', padding: 0 }}>
                                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                    {digest.suggestedActions.map((action: any, i: number) => (
+                                    {displayDigest.suggestedActions.map((action: any, i: number) => (
                                         <li key={i} className="list-item blue-list" style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem' }}>
                                             <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#3B82F6', flexShrink: 0 }}></div>
                                             <span>{action.label}</span>
@@ -305,10 +195,10 @@ export default function DailyBriefingPage() {
                                 <h3>Wins</h3>
                             </div>
 
-                            {digest.quickWins.length > 0 ? (
+                            {displayDigest.quickWins.length > 0 ? (
                                 <ul style={{ listStyle: 'none', padding: 0 }}>
                                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                    {digest.quickWins.map((win: any, i: number) => (
+                                    {displayDigest.quickWins.map((win: any, i: number) => (
                                         <li key={i} className="list-item green-list">
                                             <span className="repo-tag green-text">{win.repo}</span>
                                             {win.title}
@@ -324,6 +214,35 @@ export default function DailyBriefingPage() {
                 </div>
             )}
 
+            {/* LOCKED OVERLAY */}
+            {lockedState && (
+                <div className="locked-overlay">
+                    <div className="locked-card fade-in-up">
+                        <div className="icon-wrapper">
+                            <div className="icon-ring"></div>
+                            {/* Determine Icon: Sun for morning, Moon for evening */}
+                            {lockedState.schedule === 'morning'
+                                ? <Sun size={48} className="main-icon" strokeWidth={1.5} />
+                                : <Moon size={48} className="main-icon" strokeWidth={1.5} />
+                            }
+                        </div>
+
+                        <h2 className="locked-title">
+                            {lockedState.schedule === 'morning' ? 'Reviewing Morning Intel' : 'Compiling Evening Wrap-up'}
+                        </h2>
+
+                        <p className="locked-subtitle">
+                            Your briefing is locked until <strong>{lockedState.unlockHour > 12 ? `${lockedState.unlockHour - 12}:00 PM` : `${lockedState.unlockHour}:00 AM`}</strong> to help you stay focused.
+                        </p>
+
+                        <div className="status-badge">
+                            <span className="pulsing-dot"></span>
+                            Status: <span style={{ fontWeight: 600, marginLeft: '4px' }}>Focus Mode</span>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <style jsx>{`
                 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
@@ -332,9 +251,124 @@ export default function DailyBriefingPage() {
                     margin: 0 auto;
                     padding: 3rem 1.5rem; /* Reduced horizontal padding for mobile */
                     position: relative;
+                    min-height: 100vh; /* Ensure full height */
                 }
                 @media (min-width: 768px) {
                     .page-wrapper { padding: 3rem 2rem; }
+                }
+
+                /* BLURRED MOCK CONTENT */
+                .is-blurred {
+                    filter: blur(8px);
+                    opacity: 0.5;
+                    pointer-events: none;
+                    user-select: none;
+                }
+
+                /* LOCKED OVERLAY */
+                .locked-overlay {
+                    position: absolute;
+                    top: 0; left: 0; right: 0; bottom: 0;
+                    z-index: 50;
+                    display: flex;
+                    align-items: center; /* Center vertically in page-wrapper */
+                    justify-content: center;
+                    /* Optional: extra gradient overlay */
+                    background: linear-gradient(to bottom, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.8) 100%);
+                    min-height: 80vh; 
+                }
+
+                .locked-card {
+                    text-align: center;
+                    background: #ffffff;
+                    padding: 3rem 2rem;
+                    border-radius: 24px;
+                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+                    border: 1px solid #f1f5f9;
+                    max-width: 480px;
+                    width: 90%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    /* Ensure card stays legible above blur */
+                    backdrop-filter: blur(0px); 
+                }
+                
+                .icon-wrapper {
+                    position: relative;
+                    margin-bottom: 2rem;
+                    width: 80px;
+                    height: 80px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                
+                .icon-ring {
+                    position: absolute;
+                    top: 0; left: 0;
+                    width: 100%; height: 100%;
+                    border-radius: 50%;
+                    border: 2px solid #e2e8f0;
+                    opacity: 0.5;
+                }
+
+                .main-icon {
+                    color: #64748b;
+                    z-index: 2;
+                }
+
+                .locked-title {
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                    color: #0f172a;
+                    margin-bottom: 0.75rem;
+                    letter-spacing: -0.02em;
+                }
+
+                .locked-subtitle {
+                    font-size: 1rem;
+                    color: #64748b;
+                    line-height: 1.6;
+                    margin-bottom: 2rem;
+                    max-width: 90%;
+                }
+
+                .status-badge {
+                    display: inline-flex;
+                    align-items: center;
+                    padding: 0.5rem 1rem;
+                    background: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 99px;
+                    font-size: 0.85rem;
+                    color: #475569;
+                }
+
+                .pulsing-dot {
+                    width: 8px;
+                    height: 8px;
+                    background-color: #f59e0b; /* Amber for 'Focus/Wait' */
+                    border-radius: 50%;
+                    margin-right: 8px;
+                    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+                    animation: pulse 2s infinite;
+                }
+
+                @keyframes pulse {
+                    0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+                    70% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
+                    100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+                }
+
+                .fade-in-up {
+                    animation: fadeInUp 0.6s ease-out forwards;
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+
+                @keyframes fadeInUp {
+                    to { opacity: 1; transform: translateY(0); }
                 }
 
                 .page-header { margin-bottom: 3rem; position: relative; }
@@ -467,8 +501,7 @@ export default function DailyBriefingPage() {
                 .green-icon { background: #F0FDF4; color: #22C55E; }
                 .green-list { background: #F0FDF4; color: #166534; }
                 .green-text { color: #22C55E; }
-
-                `}</style>
+            `}</style>
 
             {/* DEBUG FOOTER (TEMPORARY) */}
             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
