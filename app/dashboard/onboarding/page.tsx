@@ -175,7 +175,7 @@ export default function Onboarding() {
                     <div className="onboarding-schedule-grid">
                         {[
                             { value: 'morning', label: 'Morning Briefing', time: '8:00 AM', desc: 'Start your day with a fresh update.' },
-                            { value: 'evening', label: 'Evening Wrap-up', time: '5:00 PM', desc: 'Recap what happened before you sign off.' },
+                            { value: 'afternoon', label: 'Afternoon Briefing', time: '2:00 PM', desc: 'Catch up after lunch with a focused summary.' },
                         ].map((option) => (
                             <div
                                 key={option.value}

@@ -224,7 +224,7 @@ export default function DailyDigest({ initialProfile }: DailyDigestProps) {
             <div className="dashboard-header">
                 <div>
                     <h1 className="greeting-title">
-                        Good morning, {initialProfile?.name?.split(' ')[0] || 'there'}.
+                        Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening'}, {initialProfile?.name?.split(' ')[0] || 'there'}.
                     </h1>
                     <p className="greeting-subtitle">
                         Here is your summarized activity for <strong>today</strong>.
