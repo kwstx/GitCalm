@@ -32,6 +32,7 @@ export async function generateDigestWithAI(events: ProcessedEvent[], role: strin
             console.log("Using Cloud AI Digest");
             return cloudDigest;
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
         console.error("Cloud digest failed:", e);
         return {

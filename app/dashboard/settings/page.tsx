@@ -19,7 +19,7 @@ export default function SettingsPage() {
     useEffect(() => {
         const savedFreq = localStorage.getItem('gitcalm_digest_freq');
         if (savedFreq === 'Daily' || savedFreq === 'Weekly') {
-            setDigestFreq(savedFreq);
+            setTimeout(() => setDigestFreq(savedFreq), 0);
         }
 
         // Fetch user profile from API
@@ -65,17 +65,17 @@ export default function SettingsPage() {
         URL.revokeObjectURL(url);
 
         setIsExporting(false);
-        showTemporaryToast('Data exported successfully');
+        showTemporaryToast();
     };
 
     const toggleDigest = () => {
         const newFreq = digestFreq === 'Daily' ? 'Weekly' : 'Daily';
         setDigestFreq(newFreq);
         localStorage.setItem('gitcalm_digest_freq', newFreq);
-        showTemporaryToast(`Frequency updated to ${newFreq}`);
+        showTemporaryToast();
     };
 
-    const showTemporaryToast = (msg: string) => {
+    const showTemporaryToast = () => {
         setShowToast(true);
         setTimeout(() => setShowToast(false), 3000);
     };

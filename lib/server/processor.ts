@@ -6,7 +6,63 @@ import { interpretEvent } from '../ai/classifier';
  * Server-side processor for GitHub data
  * Integrates AI classification and Gemini Summarization
  */
-export async function processGitHubDataServer(rawData: any[]): Promise<ProcessedEvent[]> {
+interface GitHubUser {
+    login: string;
+}
+
+interface GitHubPR {
+    id: number;
+    number: number;
+    title: string;
+    body?: string | null;
+    merged_at: string | null;
+    html_url: string;
+    user: GitHubUser | null;
+    updated_at: string;
+}
+
+interface GitHubIssue {
+    id: number;
+    number: number;
+    title: string;
+    body?: string | null;
+    state: string;
+    html_url: string;
+    user: GitHubUser | null;
+    updated_at: string;
+    pull_request?: unknown;
+}
+
+interface GitHubWorkflowRun {
+    id: number;
+    name?: string | null;
+    conclusion: string | null;
+    head_branch: string | null;
+    html_url: string;
+    updated_at: string;
+}
+
+interface GitHubEventNative {
+    id: string;
+    type: string | null;
+    created_at: string | null;
+    actor: {
+        login: string;
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    payload: any;
+}
+
+export interface RepoData {
+    repo: string;
+    pullRequests?: GitHubPR[];
+    issues?: GitHubIssue[];
+    workflows?: GitHubWorkflowRun[];
+    events?: GitHubEventNative[];
+    lastFailure?: string | null;
+}
+
+export async function processGitHubDataServer(rawData: RepoData[]): Promise<ProcessedEvent[]> {
     const events: ProcessedEvent[] = [];
 
     for (const repoData of rawData) {
@@ -31,7 +87,7 @@ export async function processGitHubDataServer(rawData: any[]): Promise<Processed
                         category: 'info',
                         title: `Pushed ${commitCount} commit${commitCount > 1 ? 's' : ''} to ${branch}`,
                         summary: `Latest: "${message.split('\n')[0]}"`,
-                        timestamp: event.created_at,
+                        timestamp: event.created_at || new Date().toISOString(),
                         repo: repoName,
                         url: `https://github.com/${repo}/commits/${branch}`, // Approximate link
                         priority: 'low',
@@ -51,9 +107,8 @@ export async function processGitHubDataServer(rawData: any[]): Promise<Processed
                 const aiText = `Title: ${pr.title}. ${pr.body ? 'Description: ' + pr.body.substring(0, 200) : ''}`;
 
                 // Get AI classification
-                let aiResult: any;
-                let summaryResult: { summary: string; impact: string } | null = null;
-                const hasGemini = !!process.env.GEMINI_API_KEY;
+                let aiResult: { label: string; score: number; reason: string };
+
 
                 try {
                     // 1. Fast Classification
@@ -65,8 +120,8 @@ export async function processGitHubDataServer(rawData: any[]): Promise<Processed
                     //    summaryResult = await generateEventSummary(pr.title, pr.body, 'pr');
                     // }
 
-                } catch (e) {
-                    console.error(`[Processor] AI Failed for PR ${pr.number}:`, e);
+                } catch {
+                    console.error(`[Processor] AI Failed for PR ${pr.number}`);
                     aiResult = {
                         label: 'general update',
                         score: 0,
@@ -117,7 +172,7 @@ export async function processGitHubDataServer(rawData: any[]): Promise<Processed
                         ? `PR #${pr.number} merged: ${pr.title}`
                         : `PR #${pr.number}: ${pr.title}`,
                     // Use heuristic fallback only
-                    summary: `Pull request by ${pr.user.login}. ${aiResult.reason}`,
+                    summary: `Pull request by ${pr.user?.login || 'unknown'}. ${aiResult.reason}`,
                     timestamp: pr.updated_at,
                     repo: repoName,
                     url: pr.html_url,
@@ -141,7 +196,7 @@ export async function processGitHubDataServer(rawData: any[]): Promise<Processed
                 let aiResult;
                 try {
                     aiResult = await interpretEvent(aiText);
-                } catch (e) {
+                } catch {
                     aiResult = {
                         label: 'general update',
                         score: 0,
@@ -162,7 +217,7 @@ export async function processGitHubDataServer(rawData: any[]): Promise<Processed
                     type: 'issue',
                     category: 'info',
                     title: `Issue #${issue.number}: ${issue.title}`,
-                    summary: `Issue by ${issue.user.login}. ${aiResult.reason}`,
+                    summary: `Issue by ${issue.user?.login || 'unknown'}. ${aiResult.reason}`,
                     timestamp: issue.updated_at,
                     repo: repoName,
                     url: issue.html_url,
@@ -182,15 +237,15 @@ export async function processGitHubDataServer(rawData: any[]): Promise<Processed
                     // because the status is the most important signal.
                     // But we can check the name to see if it's a "Security Scan" or "Deploy".
 
-                    const aiText = `Workflow Name: ${workflow.name}`;
+
                     // Optional: could allow AI to categorize the workflow type, but straightforward logic is usually enough here.
 
                     events.push({
                         id: `workflow-${workflow.id}`,
                         type: 'ci',
                         category: 'warning',
-                        title: `CI Build Failed: ${workflow.name}`,
-                        summary: `Workflow "${workflow.name}" failed on ${workflow.head_branch}.`,
+                        title: `CI Build Failed: ${workflow.name || 'Unknown Workflow'}`,
+                        summary: `Workflow "${workflow.name || 'Unknown'}" failed on ${workflow.head_branch || 'unknown branch'}.`,
                         timestamp: workflow.updated_at,
                         repo: repoName,
                         url: workflow.html_url,

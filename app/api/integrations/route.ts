@@ -12,7 +12,7 @@ export async function GET() {
 
         const data = await getIntegrations();
         return NextResponse.json({ data });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Failed to fetch integrations' }, { status: 500 });
     }
 }

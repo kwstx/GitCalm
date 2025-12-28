@@ -46,7 +46,7 @@ export default function AboutPage() {
                 </p>
                 <div style={{ fontSize: '1.15rem', lineHeight: 1.8, color: '#475569' }}>
                     <p style={{ marginBottom: '2rem' }}>
-                        It starts with a few GitHub emails. Then a Slack ping. Then a Jira ticket update. Before you know it, your morning blocked off for "Deep Work" is gone.
+                        It starts with a few GitHub emails. Then a Slack ping. Then a Jira ticket update. Before you know it, your morning blocked off for &quot;Deep Work&quot; is gone.
                     </p>
                     <p style={{ marginBottom: '2rem' }}>
                         Modern development tools are incredible, but they&apos;re also <b>noisy</b>. They&apos;re designed to demand your attention immediately, regardless of whether it&apos;s actually urgent.

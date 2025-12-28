@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { createGitHubClient, fetchRepoEvents, fetchPullRequests, fetchIssues, fetchWorkflowRuns, fetchLastFailure } from '@/lib/github/client';
-import { processGitHubDataServer } from '@/lib/server/processor';
+import { processGitHubDataServer, RepoData } from '@/lib/server/processor';
+import { ProcessedEvent } from '@/lib/github/types';
 
 import { z } from 'zod';
 
@@ -63,7 +64,7 @@ export async function POST(request: Request) {
             }
         });
 
-        const results = (await Promise.all(repoPromises)).filter((r) => r !== null) as any[];
+        const results = (await Promise.all(repoPromises)).filter((r) => r !== null) as RepoData[];
 
         // --- Calculate Global Streak ---
         let mostRecentFailureTime = 0;
@@ -90,7 +91,7 @@ export async function POST(request: Request) {
 
         // Process events server-side
         console.log('[API] Starting server-side processing...');
-        let processedEvents: any[] = []; // Explicitly typed to allow assignment
+        let processedEvents: ProcessedEvent[] = [];
         try {
             processedEvents = await processGitHubDataServer(results);
             console.log('[API] Processing complete.');

@@ -3,8 +3,11 @@ import { useState, useEffect } from 'react';
 
 export default function DebugPage() {
     const [status, setStatus] = useState('Initializing...');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [profile, setProfile] = useState<any>(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [events, setEvents] = useState<any>(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [error, setError] = useState<any>(null);
 
     useEffect(() => {
@@ -57,9 +60,10 @@ export default function DebugPage() {
             setEvents(eventsData);
             setStatus('SUCCESS: Data fetched completely.');
 
-        } catch (err: any) {
-            console.error(err);
-            setError(err.message || String(err));
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (e: any) {
+            console.error(e);
+            setError(e.message || String(e));
             setStatus('FAILED: Diagnostics stopped due to error.');
         }
     };

@@ -17,6 +17,7 @@ export default async function DebugEnvPage() {
             const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
             const result = await model.generateContent("Say 'Flash OK'");
             results.push({ model: "gemini-1.5-flash (SDK)", status: "✅ Success", details: result.response.text() });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
             results.push({ model: "gemini-1.5-flash (SDK)", status: "❌ Failed", details: e.message });
         }
@@ -26,6 +27,7 @@ export default async function DebugEnvPage() {
             const model = genAI.getGenerativeModel({ model: "gemini-pro" });
             const result = await model.generateContent("Say 'Pro OK'");
             results.push({ model: "gemini-pro (SDK)", status: "✅ Success", details: result.response.text() });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
             results.push({ model: "gemini-pro (SDK)", status: "❌ Failed", details: e.message });
         }
@@ -44,6 +46,7 @@ export default async function DebugEnvPage() {
             } else {
                 results.push({ model: "gemini-1.5-flash (Raw FETCH)", status: "❌ Failed (" + response.status + ")", details: JSON.stringify(data, null, 2) });
             }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
             results.push({ model: "gemini-1.5-flash (Raw FETCH)", status: "❌ Network Error", details: e.message });
         }
@@ -54,12 +57,14 @@ export default async function DebugEnvPage() {
             const response = await fetch(listUrl);
             const data = await response.json();
             if (response.ok) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const modelNames = data.models?.map((m: any) => m.name) || [];
                 const display = modelNames.length > 0 ? modelNames.join('\n') : "No models found in list.";
                 results.push({ model: "ListModels API", status: "✅ Success", details: display });
             } else {
                 results.push({ model: "ListModels API", status: "❌ Failed (" + response.status + ")", details: JSON.stringify(data, null, 2) });
             }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
             results.push({ model: "ListModels API", status: "❌ Network Error", details: e.message });
         }

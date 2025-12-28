@@ -84,7 +84,10 @@ export async function generateEventSummary(title: string, body: string, type: 'p
 /**
  * Generate a comprehensive daily digest using Gemini
  */
-export async function generateDailyDigestAI(events: any[], role: string): Promise<any> {
+import { ProcessedEvent } from '../github/types';
+import { SmartDigest } from './digest';
+
+export async function generateDailyDigestAI(events: ProcessedEvent[], role: string): Promise<SmartDigest | null> {
     if (!genAI || events.length === 0) return null;
 
     if (!checkRateLimit()) {

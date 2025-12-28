@@ -85,7 +85,7 @@ export default function DailyDigest({ initialProfile }: DailyDigestProps) {
         end: new Date()
     });
 
-    const { events: apiEvents, streak, loading: eventsLoading, error, refetch } = useGitHubEvents(repos, dateRange);
+    const { events: apiEvents, loading: eventsLoading, error, refetch } = useGitHubEvents(repos, dateRange);
     const loading = reposLoading || eventsLoading;
 
     // Safety timeout to prevent infinite loading (Legacy safety, SWR usually handles this but good to keep)
@@ -122,29 +122,8 @@ export default function DailyDigest({ initialProfile }: DailyDigestProps) {
     });
 
 
-    // AI Digest State
-    const [aiDigest, setAiDigest] = useState<any>(null);
-    const [generatingDigest, setGeneratingDigest] = useState(false);
+    // AI Digest State (Moved to /dashboard/briefing)
 
-    const handleGenerateDigest = async () => {
-        setGeneratingDigest(true);
-        try {
-            const res = await fetch('/api/digest/generate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    date: dateRange.end.toISOString(),
-                    userContext: 'Manager' // TODO: Get from profile
-                })
-            });
-            const { data } = await res.json();
-            setAiDigest(data);
-        } catch (e) {
-            console.error('Failed to generate digest', e);
-        } finally {
-            setGeneratingDigest(false);
-        }
-    };
 
     // Filter events into categories for detailed display
     const outcomes = events.filter(e => e.category === 'success');
@@ -204,11 +183,7 @@ export default function DailyDigest({ initialProfile }: DailyDigestProps) {
     // --- GAMIFICATION: CLEAN STREAK ---
     // Use real backend streak if available, otherwise default to 0 (or 12 for demo)
     // -1 indicates "Perfect" (no failures found)
-    const streakDays = useDemoData ? 12 : (streak ?? 0);
-    const isStreakLoading = loading && streak === null;
-    const isPerfect = streakDays === -1;
 
-    // --- BROWSER NOTIFICATIONS ---
     const [latestSeenId, setLatestSeenId] = useState<string | null>(null);
 
     useEffect(() => {
@@ -237,7 +212,7 @@ export default function DailyDigest({ initialProfile }: DailyDigestProps) {
 
         // Update tracker
         if (newestEvent) {
-            setLatestSeenId(newestEvent.id);
+            setTimeout(() => setLatestSeenId(newestEvent.id), 0);
         }
 
     }, [events, latestSeenId]);
@@ -557,7 +532,7 @@ export default function DailyDigest({ initialProfile }: DailyDigestProps) {
 
                             <div style={{ textAlign: 'center', marginTop: '3rem', paddingBottom: '3rem' }}>
                                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#94a3b8', fontSize: '0.9rem' }}>
-                                    <span>🎉 You're all caught up!</span>
+                                    <span>🎉 You&apos;re all caught up!</span>
                                 </div>
                             </div>
                         </>

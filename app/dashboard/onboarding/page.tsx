@@ -92,7 +92,7 @@ export default function Onboarding() {
             {step === 1 && (
                 <div>
                     <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '1rem', color: '#0f172a' }}>How do you work?</h1>
-                    <p style={{ fontSize: '1.1rem', color: '#64748b', marginBottom: '2.5rem' }}>We'll tailor your daily digest based on your role.</p>
+                    <p style={{ fontSize: '1.1rem', color: '#64748b', marginBottom: '2.5rem' }}>We&apos;ll tailor your daily digest based on your role.</p>
 
                     <div className="onboarding-role-grid">
                         {[

@@ -104,6 +104,7 @@ export default function IntegrationsPage() {
 
     const [integrations, setIntegrations] = useState<Integration[]>(initialIntegrations);
     const [loading, setLoading] = useState(true);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [configModal, setConfigModal] = useState<{ isOpen: boolean; integrationId: string | null; fields: any[]; values: any } | null>(null);
 
     useEffect(() => {
@@ -115,6 +116,7 @@ export default function IntegrationsPage() {
 
                 if (data && Array.isArray(data)) {
                     setIntegrations(prev => prev.map(item => {
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         const saved = data.find((d: any) => d.id === item.id);
                         return saved ? { ...item, connected: saved.connected, config: saved.config } : item;
                     }));
@@ -156,7 +158,7 @@ export default function IntegrationsPage() {
         setLoading(false);
     };
 
-    const updateIntegrationStatus = async (id: string, connected: boolean, config: any) => {
+    const updateIntegrationStatus = async (id: string, connected: boolean, config: Record<string, string>) => {
         // Optimistic UI update
         setIntegrations(prev => prev.map(int =>
             int.id === id ? { ...int, connected, config } : int

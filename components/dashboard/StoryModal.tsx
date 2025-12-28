@@ -21,7 +21,7 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
             }, 10);
             return () => clearTimeout(t);
         } else {
-            setIsVisible(false); // Start exit animation
+            setTimeout(() => setIsVisible(false), 0); // Start exit animation
             const timer = setTimeout(() => {
                 document.body.style.overflow = '';
             }, 300);

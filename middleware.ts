@@ -1,5 +1,8 @@
-import { auth } from "@/auth"
+import NextAuth from "next-auth"
+import authConfig from "./auth.config"
 import { NextResponse } from "next/server"
+
+const { auth } = NextAuth(authConfig)
 
 export default auth((req) => {
     // Basic Rate Limit Headers (Informational Only without Redis)

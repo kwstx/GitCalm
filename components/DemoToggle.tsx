@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import Image from 'next/image';
 
 export default function DemoToggle() {
     const [activeTab, setActiveTab] = useState<'noisy' | 'calm'>('calm');
@@ -146,23 +147,7 @@ export default function DemoToggle() {
                             </div>
                         </div>
 
-                        {/* Bottom Toast */}
-                        <div className="clarity-toast">
-                            <div className="toast-avatar">
-                                <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`} alt="User" />
-                            </div>
-                            <div className="toast-text">
-                                <span className="toast-highlight">+14</span>
-                                users signed in less than a minute!
-                            </div>
-                            <div className="toast-close">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <line x1="15" y1="9" x2="9" y2="15"></line>
-                                    <line x1="9" y1="9" x2="15" y2="15"></line>
-                                </svg>
-                            </div>
-                        </div>
+
 
                         <style jsx>{`
                             .clarity-card {
@@ -229,16 +214,6 @@ export default function DemoToggle() {
                             .red-fill { background: #EF4444; }
                             .purple-fill { background: #8B5CF6; }
 
-                            /* Toast */
-                            .clarity-toast {
-                                margin-top: 2rem; padding: 0.75rem; background: #F9FAFB; border-radius: 12px;
-                                display: flex; align-items: center; gap: 0.75rem;
-                            }
-                            .toast-avatar { width: 36px; height: 36px; border-radius: 8px; overflow: hidden; background: #ddd; flex-shrink: 0; }
-                            .toast-avatar img { width: 100%; height: 100%; }
-                            .toast-text { font-size: 0.85rem; color: #374151; line-height: 1.3; }
-                            .toast-highlight { fontWeight: 700; font-size: 1rem; margin-right: 0.5rem; }
-                            .toast-close { margin-left: auto; cursor: pointer; color: #9CA3AF; }
 
                             /* Desktop Styles */
                             @media (min-width: 768px) {
@@ -252,10 +227,7 @@ export default function DemoToggle() {
                                 .bubble-purple { width: 90px; height: 90px; right: 40px; bottom: 0; }
                                 .stats-list { gap: 1rem; }
                                 .stat-value { font-size: 1.25rem; }
-                                .clarity-toast { gap: 1rem; }
-                                .toast-avatar { width: 40px; height: 40px; }
-                                .toast-text { font-size: 0.9rem; }
-                                .toast-highlight { font-size: 1.1rem; }
+
                             }
                         `}</style>
                     </div>

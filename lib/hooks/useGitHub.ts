@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+
 import useSWR from 'swr';
 import { ProcessedEvent } from '@/lib/github/types';
 
@@ -11,7 +11,7 @@ interface UseGitHubEventsResult {
 }
 
 // Fetcher function that returns the full response structure
-const eventsFetcher = async (url: string, { arg }: { arg: any }) => {
+const eventsFetcher = async (url: string, { arg }: { arg: { repos: string[]; startDate?: string } }) => {
     const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -36,7 +36,7 @@ export function useGitHubEvents(repos: string[], dateRange?: { start: Date; end:
 
     const { data: responseData, error: swrError, isLoading, mutate } = useSWR(
         key,
-        ([url, body]: [string, any]) => eventsFetcher(url, { arg: body }),
+        ([url, body]: [string, { repos: string[]; startDate?: string }]) => eventsFetcher(url, { arg: body }),
         {
             revalidateOnFocus: true,
             refreshInterval: 300000,

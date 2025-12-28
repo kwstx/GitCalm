@@ -60,7 +60,15 @@ export async function getUserProfile() {
     };
 }
 
-export async function saveUserProfile(data: any) {
+interface UserProfileInput {
+    nickname?: string;
+    role?: string;
+    digestSchedule?: string;
+    focusAreas?: string[];
+    selectedRepos?: string[];
+}
+
+export async function saveUserProfile(data: UserProfileInput) {
     const userId = await getCurrentUserId();
     if (!userId) throw new Error("Not authenticated");
 
@@ -103,7 +111,7 @@ export async function getIntegrations() {
     });
 }
 
-export async function saveIntegration(integrationId: string, data: { connected: boolean; config?: any }) {
+export async function saveIntegration(integrationId: string, data: { connected: boolean; config?: Record<string, string> }) {
     const userId = await getCurrentUserId();
     if (!userId) throw new Error("Not authenticated");
 

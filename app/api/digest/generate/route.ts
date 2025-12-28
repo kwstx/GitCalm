@@ -10,7 +10,8 @@ export async function POST(request: Request) {
         const session = await auth();
         // IMPORTANT: The existing type definition for session might put accessToken on the root, but let's check
         // If type error occurs, we cast it. Ideally we fix the type, but time is short.
-        const token = (session as any)?.accessToken || (session?.user as any)?.accessToken;
+        type SessionWithToken = typeof session & { accessToken?: string; user?: { accessToken?: string } };
+        const token = (session as SessionWithToken)?.accessToken || (session?.user as SessionWithToken['user'])?.accessToken;
         const userId = session?.user?.id;
 
         if (!session || !token || !userId) {
@@ -112,7 +113,8 @@ export async function POST(request: Request) {
                 data: {
                     userId,
                     dateKey,
-                    digest: digest as any
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    digest: digest as Record<string, any>
                 }
             });
             console.log(`[Digest API] Saved digest to cache.`);

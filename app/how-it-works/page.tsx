@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import FooterWrapper from "@/components/FooterWrapper";
+
 import Icon87 from "@/components/icons/Icon87";
 
 export default function HowItWorks() {
