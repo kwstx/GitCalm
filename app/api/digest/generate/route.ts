@@ -79,7 +79,41 @@ export async function POST(request: Request) {
                 debug: { serverHour, schedule, unlockHour, type: 'CACHE_HIT' }
             });
         }
-        // ...
+        console.log(`[Digest API] CACHE MISS for ${userId} on ${dateKey} - Generating...`);
+
+        console.log(`[Digest API] Generating... (Schedule: ${schedule} verified)`);
+
+        // 1. Fetch Real Events
+        const service = getGitHubService(token);
+        const repos = await service.getRepos();
+        const repoNames = repos.slice(0, 5).map(r => r.full_name);
+
+        const rawRepoData = await Promise.all(repoNames.map(async (repo) => {
+            return service.getRepoDetails(repo);
+        }));
+
+        const processedEvents = await processGitHubDataServer(rawRepoData);
+
+        // Filter by Date (Only "Today" or requested date range)
+        const cutoff = new Date();
+        cutoff.setHours(cutoff.getHours() - 24);
+
+        const recentEvents = processedEvents.filter(e => new Date(e.timestamp) > cutoff);
+
+        // 3. Smart Analysis (Local Engine)
+        const digest = await generateDigestWithAI(recentEvents, userContext || 'Developer');
+
+        // 4. Save to Cache
+        if (digest && !digest.summary.startsWith('⚠️')) {
+            await prisma.dailyDigest.create({
+                data: {
+                    userId,
+                    dateKey,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    digest: digest as Record<string, any>
+                }
+            });
+        }
         return NextResponse.json({
             data: digest,
             debug: { serverHour, schedule, unlockHour, type: 'GENERATED' }
