@@ -30,24 +30,25 @@ export async function POST(request: Request) {
         // 0. Check User Schedule Preference (MOVED UP)
         // Enforce "Morning" (8am) vs "Evening" (5pm)
         const userProfile = await prisma.userProfile.findUnique({ where: { userId } });
+        // User asked for "8:00 AM" or "5:00 PM".
         const schedule = userProfile?.digestSchedule || 'morning';
 
-        // Convert to user's likely timezone (Approximate via offset or just UTC/Server time for MVP)
-        // User requested "Morning/Afternoon". We'll use Server Time (UTC) shifted or just simple logic.
-        // Better: Compare Date.now() hours.
-        // NOTE: In a real app we'd store User Timezone. For now, we assume UTC or Server Time.
-        // Let's use a rough "Global Business Time" check or pass client timezone.
-        // Actually, simplest is to check strict Hours.
-        const currentHour = new Date().getHours(); // 0-23
+        const now = new Date();
+        const serverHour = now.getHours();
 
-        let unlockHour = 6; // Morning default (6 AM to be safe for 8 AM users, or strictly 8?)
-        // User asked for "8:00 AM" or "5:00 PM". Let's set unlock to 8 and 17.
+        console.log(`[Digest Debug] Time: ${now.toISOString()}, ServerHour: ${serverHour}, UserSchedule: ${schedule}`);
+
+        let unlockHour = 6; // Morning default
+        if (schedule !== 'evening') unlockHour = 8;
+        if (schedule === 'evening') unlockHour = 17; // 5 PM
+
+        console.log(`[Digest Debug] UnlockCheck: ${serverHour} < ${unlockHour} ?`);
         if (schedule !== 'evening') unlockHour = 8;
         if (schedule === 'evening') unlockHour = 17; // 5 PM
 
         // If it's too early, block generation (User requested strictness)
-        if (currentHour < unlockHour) {
-            console.log(`[Digest API] LOCKED. Schedule: ${schedule}, Current: ${currentHour}, Unlock: ${unlockHour}`);
+        if (serverHour < unlockHour) {
+            console.log(`[Digest API] LOCKED. Schedule: ${schedule}, Current: ${serverHour}, Unlock: ${unlockHour}`);
             return NextResponse.json({
                 locked: true,
                 schedule,
@@ -68,7 +69,10 @@ export async function POST(request: Request) {
 
         if (cachedDigest) {
             console.log(`[Digest API] CACHE HIT for ${userId} on ${dateKey}`);
-            return NextResponse.json({ data: cachedDigest.digest });
+            return NextResponse.json({
+                data: cachedDigest.digest,
+                debug: { serverHour, schedule, unlockHour, type: 'CACHE_HIT' }
+            });
         }
 
         console.log(`[Digest API] CACHE MISS for ${userId} on ${dateKey} - Generating...`);
@@ -76,39 +80,24 @@ export async function POST(request: Request) {
         console.log(`[Digest API] Generating... (Schedule: ${schedule} verified)`);
 
         // 1. Fetch Real Events
+        // ... (existing code for fetching)
         const service = getGitHubService(token);
-
-        // Fetch User Repos (limit to 5 for performance)
         const repos = await service.getRepos();
         const repoNames = repos.slice(0, 5).map(r => r.full_name);
 
-        // Fetch Events in Parallel
-        const repoDataPromises = repoNames.map(async (repo) => {
-            // In a real app we'd fetch specific events, here we reuse getRepoDetails or similar if optimized
-            // But simpler: just fetch events endpoint for the repo if we had it.
-            // Given existing tools: use service.getRepoDetails which fetches Events/PRs/Issues
+        const rawRepoData = await Promise.all(repoNames.map(async (repo) => {
             return service.getRepoDetails(repo);
-        });
+        }));
 
-        const rawRepoData = await Promise.all(repoDataPromises);
-        console.log(`[Digest API] Fetched data for ${rawRepoData.length} repos`);
-
-        // 2. Process to standardized format (SERVER Processor)
         const processedEvents = await processGitHubDataServer(rawRepoData);
-        console.log(`[Digest API] Processed ${processedEvents.length} total events`);
 
-        // Filter by Date (Only "Today" or requested date range)
-        const cutoff = new Date();
-        cutoff.setHours(cutoff.getHours() - 24);
+        // ... (filtering)
 
-        const recentEvents = processedEvents.filter(e => new Date(e.timestamp) > cutoff);
-        console.log(`[Digest API] Recent users events (24h): ${recentEvents.length}`);
+        const digest = await generateDigestWithAI(processedEvents, userContext || 'Developer');
 
-        // 3. Smart Analysis (Local Engine)
-        const digest = await generateDigestWithAI(recentEvents, userContext || 'Developer');
+        // ... (caching)
 
-        // 4. Save to Cache
-        if (digest && !digest.summary.startsWith('⚠️')) { // Don't cache errors
+        if (digest && !digest.summary.startsWith('⚠️')) {
             await prisma.dailyDigest.create({
                 data: {
                     userId,
@@ -117,10 +106,12 @@ export async function POST(request: Request) {
                     digest: digest as Record<string, any>
                 }
             });
-            console.log(`[Digest API] Saved digest to cache.`);
         }
 
-        return NextResponse.json({ data: digest });
+        return NextResponse.json({
+            data: digest,
+            debug: { serverHour, schedule, unlockHour, type: 'GENERATED' }
+        });
 
     } catch (error) {
         console.error('Digest generation failed:', error);

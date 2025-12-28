@@ -420,7 +420,26 @@ export default function DailyBriefingPage() {
                 .green-list { background: #F0FDF4; color: #166534; }
                 .green-text { color: #22C55E; }
 
-            `}</style>
+                `}</style>
+
+            {/* DEBUG FOOTER (TEMPORARY) */}
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            {(digest as any)?.debug && (
+                <div style={{
+                    textAlign: 'center',
+                    marginTop: '4rem',
+                    padding: '1rem',
+                    borderTop: '1px solid #e2e8f0',
+                    color: '#94a3b8',
+                    fontSize: '0.8rem',
+                    fontFamily: 'monospace'
+                }}>
+                    DEBUG: Schedule={(digest as any).debug.schedule} |
+                    ServerHour={(digest as any).debug.serverHour} |
+                    Unlock={(digest as any).debug.unlockHour} |
+                    Source={(digest as any).debug.type}
+                </div>
+            )}
         </div>
     );
 }
