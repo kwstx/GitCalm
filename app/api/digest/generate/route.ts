@@ -27,14 +27,22 @@ export async function POST(request: Request) {
         const targetDate = date ? new Date(date) : new Date();
         const dateKey = targetDate.toISOString().split('T')[0]; // "YYYY-MM-DD"
 
+        import { getUserProfile } from '@/lib/server/storage';
+
+        // ...
+
         // 0. Check User Schedule Preference (MOVED UP)
         // Enforce "Morning" (8am) vs "Evening" (5pm)
-        const userProfile = await prisma.userProfile.findUnique({ where: { userId } });
+        // unified profile helper guarantees same ID resolution as Settings page
+        const userProfile = await getUserProfile();
         // User asked for "8:00 AM" or "5:00 PM".
         const schedule = userProfile?.digestSchedule || 'morning';
 
         const now = new Date();
         const serverHour = now.getHours();
+
+        // Check if we are using consistent IDs (Debug only)
+        // userId (from session) vs userProfile userId (if we had it, but helper abstracts it)
 
         console.log(`[Digest Debug] Time: ${now.toISOString()}, ServerHour: ${serverHour}, UserSchedule: ${schedule}`);
 
@@ -43,8 +51,6 @@ export async function POST(request: Request) {
         if (schedule === 'evening') unlockHour = 17; // 5 PM
 
         console.log(`[Digest Debug] UnlockCheck: ${serverHour} < ${unlockHour} ?`);
-        if (schedule !== 'evening') unlockHour = 8;
-        if (schedule === 'evening') unlockHour = 17; // 5 PM
 
         // If it's too early, block generation (User requested strictness)
         if (serverHour < unlockHour) {
@@ -74,40 +80,7 @@ export async function POST(request: Request) {
                 debug: { serverHour, schedule, unlockHour, type: 'CACHE_HIT' }
             });
         }
-
-        console.log(`[Digest API] CACHE MISS for ${userId} on ${dateKey} - Generating...`);
-
-        console.log(`[Digest API] Generating... (Schedule: ${schedule} verified)`);
-
-        // 1. Fetch Real Events
-        // ... (existing code for fetching)
-        const service = getGitHubService(token);
-        const repos = await service.getRepos();
-        const repoNames = repos.slice(0, 5).map(r => r.full_name);
-
-        const rawRepoData = await Promise.all(repoNames.map(async (repo) => {
-            return service.getRepoDetails(repo);
-        }));
-
-        const processedEvents = await processGitHubDataServer(rawRepoData);
-
-        // ... (filtering)
-
-        const digest = await generateDigestWithAI(processedEvents, userContext || 'Developer');
-
-        // ... (caching)
-
-        if (digest && !digest.summary.startsWith('⚠️')) {
-            await prisma.dailyDigest.create({
-                data: {
-                    userId,
-                    dateKey,
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    digest: digest as Record<string, any>
-                }
-            });
-        }
-
+        // ...
         return NextResponse.json({
             data: digest,
             debug: { serverHour, schedule, unlockHour, type: 'GENERATED' }

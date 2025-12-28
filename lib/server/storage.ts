@@ -18,7 +18,7 @@ const DEFAULT_INTEGRATIONS = [
 ];
 
 // Helper to get current user ID
-async function getCurrentUserId() {
+export async function getCurrentUserId() {
     const session = await auth();
     if (!session?.user?.email) return null;
 
