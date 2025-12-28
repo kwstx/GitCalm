@@ -27,24 +27,8 @@ export async function POST(request: Request) {
         const targetDate = date ? new Date(date) : new Date();
         const dateKey = targetDate.toISOString().split('T')[0]; // "YYYY-MM-DD"
 
-        const cachedDigest = await prisma.dailyDigest.findUnique({
-            where: {
-                userId_dateKey: {
-                    userId,
-                    dateKey
-                }
-            }
-        });
-
-        if (cachedDigest) {
-            console.log(`[Digest API] CACHE HIT for ${userId} on ${dateKey}`);
-            return NextResponse.json({ data: cachedDigest.digest });
-        }
-
-        console.log(`[Digest API] CACHE MISS for ${userId} on ${dateKey} - Checking Schedule...`);
-
-        // 0.5. Check User Schedule Preference
-        // Enforce "Morning" (6am) vs "Afternoon" (2pm)
+        // 0. Check User Schedule Preference (MOVED UP)
+        // Enforce "Morning" (8am) vs "Evening" (5pm)
         const userProfile = await prisma.userProfile.findUnique({ where: { userId } });
         const schedule = userProfile?.digestSchedule || 'morning';
 
@@ -62,9 +46,6 @@ export async function POST(request: Request) {
         if (schedule === 'evening') unlockHour = 17; // 5 PM
 
         // If it's too early, block generation (User requested strictness)
-        // AND enable override if it's strictly "Today" but just early.
-        // But if they missed Yesterday's, allow it? No, Daily Digest is for THAT day.
-
         if (currentHour < unlockHour) {
             console.log(`[Digest API] LOCKED. Schedule: ${schedule}, Current: ${currentHour}, Unlock: ${unlockHour}`);
             return NextResponse.json({
@@ -74,6 +55,23 @@ export async function POST(request: Request) {
                 message: `Your ${schedule} briefing is preparing...`
             });
         }
+
+        // 0.5. Check Cache (Rate Limiting)
+        const cachedDigest = await prisma.dailyDigest.findUnique({
+            where: {
+                userId_dateKey: {
+                    userId,
+                    dateKey
+                }
+            }
+        });
+
+        if (cachedDigest) {
+            console.log(`[Digest API] CACHE HIT for ${userId} on ${dateKey}`);
+            return NextResponse.json({ data: cachedDigest.digest });
+        }
+
+        console.log(`[Digest API] CACHE MISS for ${userId} on ${dateKey} - Generating...`);
 
         console.log(`[Digest API] Generating... (Schedule: ${schedule} verified)`);
 
