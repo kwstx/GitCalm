@@ -19,7 +19,8 @@ const ProfileSchema = z.object({
     goals: z.array(z.string()).optional(),
     focusAreas: z.array(z.string()).optional(),
     onboardingCompleted: z.boolean().optional(),
-    minimalistMode: z.boolean().optional()
+    minimalistMode: z.boolean().optional(),
+    digestSchedule: z.string().optional()
 });
 
 export async function POST(request: Request) {

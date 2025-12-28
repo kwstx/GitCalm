@@ -7,20 +7,20 @@ import Link from 'next/link';
 export default function SettingsPage() {
     const [isClearing, setIsClearing] = useState(false);
     const [isExporting, setIsExporting] = useState(false);
-    const [digestFreq, setDigestFreq] = useState<'Daily' | 'Weekly'>('Daily');
+
     const [showToast, setShowToast] = useState(false);
     const [user, setUser] = useState({
         name: 'User Account',
         email: 'user@example.com',
-        plan: 'Free'
+        plan: 'Free',
+        digestSchedule: 'morning'
     });
 
     // Initialize from LocalStorage
     useEffect(() => {
-        const savedFreq = localStorage.getItem('gitcalm_digest_freq');
-        if (savedFreq === 'Daily' || savedFreq === 'Weekly') {
-            setTimeout(() => setDigestFreq(savedFreq), 0);
-        }
+        // const savedFreq = localStorage.getItem('gitcalm_digest_freq'); 
+        // Frequency is less relevant now, we focus on Schedule from API
+
 
         // Fetch user profile from API
         fetch('/api/user/profile')
@@ -68,11 +68,23 @@ export default function SettingsPage() {
         showTemporaryToast();
     };
 
-    const toggleDigest = () => {
-        const newFreq = digestFreq === 'Daily' ? 'Weekly' : 'Daily';
-        setDigestFreq(newFreq);
-        localStorage.setItem('gitcalm_digest_freq', newFreq);
+    const toggleSchedule = async () => {
+        const newSchedule = user.digestSchedule === 'morning' ? 'afternoon' : 'morning';
+
+        // Optimistic UI Update
+        setUser(prev => ({ ...prev, digestSchedule: newSchedule }));
         showTemporaryToast();
+
+        try {
+            await fetch('/api/user/profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ digestSchedule: newSchedule })
+            });
+        } catch (err) {
+            console.error('Failed to save schedule:', err);
+            // Revert on error? For now simple log.
+        }
     };
 
     const showTemporaryToast = () => {
@@ -141,21 +153,21 @@ export default function SettingsPage() {
                     </div>
                 </button>
 
-                {/* NOTIFICATIONS TILE */}
-                <button onClick={toggleDigest} className="tile tile-default">
+                {/* SCHEDULE TILE */}
+                <button onClick={toggleSchedule} className="tile tile-default">
                     <div className="icon-box icon-purple">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                     </div>
                     <div className="tile-content">
                         <div className="tile-title">
-                            Notifications
+                            Briefing Schedule
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <p className="tile-desc">
-                                Digest Frequency
+                                Delivery Time
                             </p>
                             <span className="freq-badge">
-                                {digestFreq}
+                                {user.digestSchedule ? (user.digestSchedule.charAt(0).toUpperCase() + user.digestSchedule.slice(1)) : 'Morning'}
                             </span>
                         </div>
                     </div>

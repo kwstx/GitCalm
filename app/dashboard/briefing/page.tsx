@@ -75,7 +75,7 @@ export default function DailyBriefingPage() {
                         Good {lockedState.schedule === 'morning' ? 'Morning' : 'Afternoon'}.
                     </h2>
                     <p style={{ fontSize: '1.1rem', color: '#64748b', marginBottom: '2rem', lineHeight: '1.6' }}>
-                        The briefing is locked until <strong>{lockedState.unlockHour > 12 ? `${lockedState.unlockHour - 12} PM` : `${lockedState.unlockHour} AM`}</strong> to help you focus.
+                        Your briefing is loading. Please come back later at <strong>{lockedState.unlockHour > 12 ? `${lockedState.unlockHour - 12} PM` : `${lockedState.unlockHour} AM`}</strong>.
                     </p>
 
                     <div className="time-pill">
